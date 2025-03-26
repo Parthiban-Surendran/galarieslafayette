@@ -1,6 +1,3 @@
-import { Alert, AlertIcon, AlertText, InfoIcon, CheckCircleIcon, CloseCircleIcon, BellIcon, AlertCircleIcon, VStack, Icon } from '@gluestack-ui/themed';
-
-
 import React, { useState } from 'react';
 import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native';
 import { Feather, AntDesign } from "@expo/vector-icons";
@@ -10,12 +7,7 @@ const ProductCard = ({
 }) => {
     const [isFavorite, setIsFavorite] = useState(false);
     return <TouchableOpacity style={styles.card} onPress={onPress}>
-        <Alert variant={"accent"} action={"success"}>
-            <AlertIcon as={InfoIcon} mr="$3" />
-            <AlertText>
-                You clicked this product
-            </AlertText>
-        </Alert>
+        
         {/* Heart Icon in Top Right */}
         <View style={styles.cards}>
             <TouchableOpacity style={styles.heartContainer} onPress={() => {
