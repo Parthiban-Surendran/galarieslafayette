@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         borderBottomWidth: 1,
         borderBottomColor: "#ccc",
-        backgroundColor: "#fff",
+        backgroundColor: "#000",
     },
     top: {
         flexDirection: "row",
