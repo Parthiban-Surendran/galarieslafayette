@@ -65,6 +65,7 @@ export default function DashboardScreen({ navigation,route }) {
                 ListFooterComponent={
                     <>
                         <LuxuryCard />
+                       
                         <BottomComp />
                     </>
                 }
