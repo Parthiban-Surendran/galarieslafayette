@@ -7,9 +7,9 @@
     <script>
         function openApp() {
             var now = new Date().getTime();
-            window.location.href = "myapp://home";
+            window.location.href = "intent://home#Intent;scheme=myapp;package=com.parthiban123.galarieslafayette;end;";
 
-            // If the app is not installed, it stays on the webpage and shows a download link
+            // If the app is not installed, redirect to download page
             setTimeout(function () {
                 var elapsed = new Date().getTime() - now;
                 if (elapsed < 2000) {
@@ -21,7 +21,5 @@
 </head>
 <body onload="openApp()">
     <h3>Redirecting to the app...</h3>
-    <p>If the app doesn't open, <a href="myapp://home">click here</a>.</p>
-    <p>If the app is not installed, <a href="https://expo.dev/accounts/parthiban123/projects/galarieslafayette/builds/eda80283-e567-477c-9fd0-a0cbbc82fafb">download it here</a>.</p>
 </body>
 </html>
