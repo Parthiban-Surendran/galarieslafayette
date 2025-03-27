@@ -30,7 +30,8 @@
             },
             {
               "scheme": "https",
-              "host": "galarieslafayette.com"
+              "host": "parthiban-surendran.github.io",
+              "pathprefix":"/home"
             }
           ],
           "category": ["BROWSABLE", "DEFAULT"]
