@@ -7,8 +7,9 @@
     <script>
         function openApp() {
             var now = new Date().getTime();
-            window.location.href = "intent://galarieslafayette#Intent;scheme=https;package=com.parthiban123.galarieslafayette;end;";
+            window.location.href = "intent://home#Intent;scheme=myapp;package=com.parthiban123.galarieslafayette;end;";
 
+            // If the app is not installed, redirect to download page
             setTimeout(function () {
                 var elapsed = new Date().getTime() - now;
                 if (elapsed < 2000) {
