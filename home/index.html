@@ -3,9 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Redirecting...</title>
+    <script>
+        function openApp() {
+            var now = new Date().getTime();
+            window.location.href = "myapp://home";
+
+            // If the app is not installed, it stays on the webpage instead of redirecting
+            setTimeout(function () {
+                var elapsed = new Date().getTime() - now;
+                if (elapsed < 2000) {
+                    alert("App is not installed. Please install it manually.");
+                }
+            }, 1500);
+        }
+    </script>
 </head>
-<body>
-    <h1>Deep Link Setup for GalariesLafayette</h1>    
+<body onload="openApp()">
+    <h3>Redirecting to the app...</h3>
 </body>
 </html>
