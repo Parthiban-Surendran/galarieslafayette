@@ -25,6 +25,14 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="com.parthiban123.galarieslafayette"/>
+        <data android:scheme="myapp"/>
+      </intent-filter>
+      <intent-filter data-generated="true">
+        <action android:name="android.intent.action.VIEW"/>
+        <data android:scheme="myapp"/>
+        <data android:scheme="https" android:host="galarieslafayette.com"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <category android:name="android.intent.category.DEFAULT"/>
       </intent-filter>
     </activity>
   </application>

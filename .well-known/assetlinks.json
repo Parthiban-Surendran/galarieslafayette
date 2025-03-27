@@ -1,0 +1,11 @@
+[
+    {
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.parthiban123.galarieslafayette",
+        "sha256_cert_fingerprints": ["13:47:98:EE:A4:45:C8:67:D4:CB:EE:97:93:D9:AA:51:CF:79:22:20:40:49:63:09:D3:30:04:DB:E0:5E:F8:F8"]
+      }
+    }
+  ]
+  

@@ -20,19 +20,7 @@
 // });
 
 
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import DrawerNavigator from './navigation/DrawerNavigator';
 
-const App = () => {
-    return (
-        <NavigationContainer>
-            <DrawerNavigator/>
-        </NavigationContainer>
-    );
-};
-
-export default App;
 
 
 
@@ -78,3 +66,58 @@ export default App;
 // };
 
 // export default App;
+
+
+
+
+
+
+
+// import React from 'react';
+// import { NavigationContainer } from '@react-navigation/native';
+// import DrawerNavigator from './navigation/DrawerNavigator';
+
+// const App = () => {
+//     return (
+//         <NavigationContainer>
+//             <DrawerNavigator/>
+//         </NavigationContainer>
+//     );
+// };
+
+// export default App;
+
+
+
+import React from "react";
+import { Text } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import DrawerNavigator from "./navigation/DrawerNavigator";
+import * as Linking from "expo-linking";
+
+const linking = {
+  prefixes: [Linking.createURL("/"), "https://galarieslafayette.com"],
+  config: {
+    screens: {
+      Home: "home",
+      Favourites: "favourites",
+      Basket: "basket",
+      Account: "account",
+      Login: "login",
+      Password: "password",
+      Dashboard: "dashboard",
+      AccountCommon: "account-common",
+      Product: "product/:id", // Example of dynamic route
+    },
+  },
+};
+
+const App = () => {
+  return (
+    <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
+      <DrawerNavigator />
+    </NavigationContainer>
+  );
+};
+
+export default App;

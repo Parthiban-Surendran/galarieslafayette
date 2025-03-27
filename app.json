@@ -21,13 +21,36 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "myapp"
+            },
+            {
+              "scheme": "https",
+              "host": "galarieslafayette.com"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ],
       "package": "com.parthiban123.galarieslafayette"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
+
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "scheme":"myapp",
+    "extra": {
+      "eas": {
+        "projectId": "000c5d1e-f524-432e-8de3-61e08373e940"
+      }
+    },
+    "owner": "parthiban123"
   }
 }

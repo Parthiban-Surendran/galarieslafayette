@@ -99,7 +99,7 @@ export default function ReusableDrawer(props) {
 
     return (
         <DrawerContentScrollView {...props} style={styles.container}>
-            <TouchableOpacity style={styles.closgoBackeButton} onPress={() => props.navigation.closeDrawer()}>
+            <TouchableOpacity style={styles.closgoBackeButton} onPress={() => {setSelectedOption(null);props.navigation.closeDrawer()}}>
                 <AntDesign name="close" size={24} color="black" />
             </TouchableOpacity>
 

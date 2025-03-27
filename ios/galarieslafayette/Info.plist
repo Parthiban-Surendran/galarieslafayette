@@ -27,6 +27,7 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
+          <string>myapp</string>
           <string>com.parthiban123.galarieslafayette</string>
         </array>
       </dict>
