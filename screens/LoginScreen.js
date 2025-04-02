@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-const LoginScreen = ({navigation, route }) => {
-    const {onClose} = route.params || {};
+const LoginScreen = ({ navigation, route }) => {
+    const { onClose,ScreenName } = route.params || {};
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
     const [isChecked, setIsChecked] = useState(false); // State for checkbox
@@ -24,27 +24,24 @@ const LoginScreen = ({navigation, route }) => {
         } else {
             setError('');
             setEmail('');
-            navigation.navigate('Password')
+            navigation.navigate('Password',{ScreenName})
         }
     };
 
     return (
         <View style={styles.container}>
-            {/* Header with Logo and Close Button */}
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Image source={require('../assets/galerieslogo.png')} style={styles.logo} />
-                <TouchableOpacity style={styles.closeButton} onPress={() => { if (onClose) {setEmail('');setIsChecked(!isChecked);onClose();} }}>
-    <MaterialIcons name="close" size={24} color="black" />
-</TouchableOpacity>
+                <TouchableOpacity style={styles.closeButton} onPress={() => { if (onClose) { setEmail(''); setIsChecked(!isChecked); onClose(); } }}>
+                    <MaterialIcons name="close" size={24} color="black" />
+                </TouchableOpacity>
             </View>
 
-            {/* Welcome Text */}
             <Text style={styles.title}>Welcome</Text>
             <Text style={styles.subtitle}>
                 Please enter your email address to log in or create an account.
             </Text>
 
-            {/* Email Input Field */}
             <View style={[styles.inputContainer, error ? styles.inputError : {}]}>
                 <TextInput
                     style={styles.input}
@@ -53,16 +50,15 @@ const LoginScreen = ({navigation, route }) => {
                     value={email}
                     onChangeText={(text) => {
                         setEmail(text);
-                        setError(''); // Reset error when user types
+                        setError(''); 
                     }}
                 />
             </View>
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-            {/* CAPTCHA Section */}
             <View style={styles.captchaContainer}>
-                <TouchableOpacity 
-                    onPress={() => setIsChecked(!isChecked)} 
+                <TouchableOpacity
+                    onPress={() => setIsChecked(!isChecked)}
                     style={[styles.checkbox, { backgroundColor: isChecked ? '#000' : '#fff' }]}
                 >
                     {isChecked ? <MaterialIcons name="check" size={18} color="white" /> : null}

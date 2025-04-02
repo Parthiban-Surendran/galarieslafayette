@@ -34,7 +34,7 @@ const AccountMenuCommon = ({route}) => {
 
                     {buttontxt!==''&&
                     <View style={styles.buttonWrapper}>
-                    <TouchableOpacity style={styles.loyaltyButton}>
+                    <TouchableOpacity style={styles.loyaltyButton} onPress={()=>navigation.navigate('Home')}>
                         <Text style={styles.loyaltyButtonText}>{buttontxt}</Text>
                     </TouchableOpacity>
                     </View>

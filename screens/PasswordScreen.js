@@ -3,7 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'reac
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
 
-const PasswordScreen = ({  navigation }) => {
+const PasswordScreen = ({ route, navigation }) => {
+    const {ScreenName} = route.params || {};
     const { setIsLoggedIn } = useAuth();
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -28,7 +29,12 @@ const PasswordScreen = ({  navigation }) => {
             setError('');
             setPassword('');
             setIsLoggedIn(true);
-            navigation.navigate('Home');
+            if(ScreenName==='home'){
+                navigation.navigate('Home');
+            }
+            else{
+             navigation.navigate('AccountCommon',{title:'Your Orders',message:'You do not have any orders',buttontxt:'START YOUR SHOPPING',name:'orders'})
+            }
         }
     };
 

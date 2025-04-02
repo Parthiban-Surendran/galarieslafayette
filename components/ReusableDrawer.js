@@ -93,6 +93,7 @@ const Home = ({ goBack,resetDrawer }) => (
 );
 
 export default function ReusableDrawer(props) {
+
     const [selectedOption, setSelectedOption] = useState(null);
     const navigation = useNavigation();
     const goBack = () => setSelectedOption(null);
@@ -120,15 +121,15 @@ export default function ReusableDrawer(props) {
             {selectedOption === null && (
                 <>
                     <View style={styles.optionbox}>
-                        <View style={styles.boxoptions}>
+                        <TouchableOpacity style={styles.boxoptions} onPress={()=>{navigation.navigate('Stores')}}>
                             <Text style={[styles.text, { fontWeight: "700" }]}>Stores</Text>
-                        </View>
-                        <View style={styles.boxoptions}>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.boxoptions} onPress={()=>{navigation.navigate('Services')}}>
                             <Text style={[styles.text, { fontWeight: "700" }]}>Services</Text>
-                        </View>
-                        <View style={styles.boxoptions}>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.boxoptions} onPress={()=>{navigation.navigate('Help')}}>
                             <Text style={[styles.text, { fontWeight: "700" }]}>Need Help?</Text>
-                        </View>
+                        </TouchableOpacity>
                     </View>
 
                     <CustomDivider />

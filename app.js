@@ -107,10 +107,10 @@ const linking = {
       Password: "password",
       Dashboard: "dashboard",
       AccountCommon: "account-common",
-      Product: "product/:id", // Example of dynamic route
     },
   },
 };
+
 
 const App = () => {
   return (

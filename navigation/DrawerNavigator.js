@@ -38,6 +38,11 @@ import { AuthProvider } from "../context/AuthContext";
 import DashboardScreen from "../screens/DashboardScreen";
 import AccountMenuCommon from "../components/AccountMenuCommon";
 import ProductScreen from "../screens/ProductScreen";
+import StoresScreen from "../screens/StoresScreen";
+import ServicesScreen from "../screens/ServicesScreen";
+import HelpScreen from "../screens/HelpScreen";
+import ServiceCommon from "../components/ServiceCommon";
+import PreparePurchaseScreen from "../screens/PreparePurchaseScreen";
 const Drawer = createDrawerNavigator();
 
 export default function DrawerNavigator({navigation}) {
@@ -56,8 +61,13 @@ export default function DrawerNavigator({navigation}) {
             <Drawer.Screen name="Dashboard" component={DashboardScreen} />
             <Drawer.Screen name="AccountCommon" component={AccountMenuCommon} />
             <Drawer.Screen name="Product" component={ProductScreen} />
+            <Drawer.Screen name="Stores" component={StoresScreen} />
 
+            <Drawer.Screen name="Services" component={ServicesScreen} />
+            <Drawer.Screen name="Help" component={HelpScreen} />
 
+            <Drawer.Screen name="ServiceComp" component={ServiceCommon} />
+            <Drawer.Screen name="Purchase" component={PreparePurchaseScreen} />
 
         </Drawer.Navigator>
         </AuthProvider>

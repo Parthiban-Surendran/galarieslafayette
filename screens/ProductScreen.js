@@ -196,7 +196,9 @@ import LuxuryCard from "../components/LuxuryCard";
 import BottomComp from "../components/BottomComp";
 import { Feather } from "@expo/vector-icons";
 
-const ProductPage = () => {
+const ProductPage = ({navigation,route}) => {
+  const {product} = route.params;
+  console.log("Products:",product)
   const [selectedSize, setSelectedSize] = useState("One Size");
   const [selectedQuantity, setSelectedQuantity] = useState("1");
   const [expandedSections, setExpandedSections] = useState({
@@ -211,37 +213,41 @@ const ProductPage = () => {
     }));
   };
 
+  const handleStores = () => {
+    navigation.navigate('Stores');
+  }
 
-  const products = [
-    {
-      id: "1",
-      name: "Bob Sport Uni",
-      brand: "MARINE SERRE",
-      price: "210,00 €",
-      image: "https://your-image-url.com/bob-sport-uni.jpg", // Replace with actual image URL
-    },
-    {
-      id: "2",
-      name: "Eclips moons mini leather satchel bag",
-      brand: "MARINE SERRE",
-      price: "600,00 €",
-      image: "https://your-image-url.com/satchel-bag.jpg", // Replace with actual image URL
-    },
-    {
-      id: "3",
-      name: "Vegetable belt in shiny leather",
-      brand: "MARINE SERRE",
-      price: "250,00 €",
-      image: "https://your-image-url.com/belt.jpg", // Replace with actual image URL
-    },
-    {
-      id: "4",
-      name: "Moon signature long gloves in recycled jersey",
-      brand: "MARINE SERRE",
-      price: "200,00 €",
-      image: "https://your-image-url.com/gloves.jpg", // Replace with actual image URL
-    },
-  ];
+
+  // const products = [
+  //   {
+  //     id: "1",
+  //     name: "Bob Sport Uni",
+  //     brand: "MARINE SERRE",
+  //     price: "210,00 €",
+  //     image: "https://your-image-url.com/bob-sport-uni.jpg", // Replace with actual image URL
+  //   },
+  //   {
+  //     id: "2",
+  //     name: "Eclips moons mini leather satchel bag",
+  //     brand: "MARINE SERRE",
+  //     price: "600,00 €",
+  //     image: "https://your-image-url.com/satchel-bag.jpg", // Replace with actual image URL
+  //   },
+  //   {
+  //     id: "3",
+  //     name: "Vegetable belt in shiny leather",
+  //     brand: "MARINE SERRE",
+  //     price: "250,00 €",
+  //     image: "https://your-image-url.com/belt.jpg", // Replace with actual image URL
+  //   },
+  //   {
+  //     id: "4",
+  //     name: "Moon signature long gloves in recycled jersey",
+  //     brand: "MARINE SERRE",
+  //     price: "200,00 €",
+  //     image: "https://your-image-url.com/gloves.jpg", // Replace with actual image URL
+  //   },
+  // ];
 
   return (
     <ScrollView style={styles.container}>
@@ -257,9 +263,9 @@ const ProductPage = () => {
 
       {/* Product Details */}
       <View style={styles.detailsContainer}>
-        <Text style={styles.brand}>MARC JACOBS</Text>
-        <Text style={styles.productName}>Mini Sac Cabas "The Mini Tote Bag"</Text>
-        <Text style={styles.price}>450,00 €</Text>
+        <Text style={styles.brand}>{product.brand}</Text>
+        <Text style={styles.productName}>{product.name}</Text>
+        <Text style={styles.price}>{product.price} </Text>
 
         {/* Size Selection */}
         <Text style={styles.label}>Size</Text>
@@ -298,7 +304,7 @@ const ProductPage = () => {
         {/* Store Availability */}
         <View style={styles.storeAvailabilityContainer}>
           <Text style={styles.storeAvailabilityText}><FontAwesome6 name='location-dot' size={18} color="#000" />  Check the availability of the item in store</Text>
-          <TouchableOpacity style={styles.chooseStoreButton}>
+          <TouchableOpacity style={styles.chooseStoreButton} onPress={handleStores}>
             <Text style={styles.chooseStoreText}>CHOOSE A STORE</Text>
           </TouchableOpacity>
         </View>
@@ -343,7 +349,7 @@ const ProductPage = () => {
 
       <Text style={styles.heading}>Also discover</Text>
       <FlatList
-        data={products}
+        data={product}
         keyExtractor={(item) => item.id}
         numColumns={2}
         renderItem={({ item }) => (

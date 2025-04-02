@@ -21,7 +21,7 @@ export default function Header() {
         navigation.navigate('Home');
     };
     const handlelogin = () => {
-        navigation.navigate('Login', { onClose: () => { navigation.navigate('Home');  } });
+        navigation.navigate('Login', { onClose: () => { navigation.navigate('Home');  },ScreenName:"home" });
     };
 
     return (

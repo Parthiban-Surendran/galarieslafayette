@@ -314,12 +314,7 @@ const styles = StyleSheet.create({
     userContainer: {
         paddingHorizontal: 10,
     },
-    greeting: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#000',
-        marginBottom: 5,
-    },
+    
     status: {
         fontSize: 16,
         color: '#555',
@@ -376,10 +371,7 @@ const styles = StyleSheet.create({
     menuTextContainer: {
         flex: 1,
     },
-    menuTitle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
+    
     menuDesc: {
         fontSize: 14,
         color: '#555',
@@ -389,6 +381,15 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderTopColor: '#ececec',
         marginTop: 20,
+    },
+    menuTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    },greeting: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#000',
+        marginBottom: 5,
     },
     logoutButton: {
         backgroundColor: '#fff',

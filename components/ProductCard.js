@@ -23,7 +23,7 @@ const ProductCard = ({
         {/* Product Details */}
         <Text style={styles.title}>{product.name}</Text>
         <Text style={styles.subtitle}>{product.subtitle || 'Description here'}</Text>
-        <Text style={styles.price}>{product.price.toFixed(2)} €</Text>
+        <Text style={styles.price}>{product.price} €</Text>
     </TouchableOpacity>;
 };
 const styles = StyleSheet.create({
