@@ -90,10 +90,16 @@
 
 
 import React from "react";
+import { Provider as PaperProvider } from 'react-native-paper';
+
 import { Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import DrawerNavigator from "./navigation/DrawerNavigator";
 import * as Linking from "expo-linking";
+import GaleriesLoader from "./components/GaleriesLoader";
+import { CartProvider } from "./context/CartContext";
+import { FavouritesProvider } from "./context/FavouritesContext";
+import { StripeProvider } from '@stripe/stripe-react-native';
 
 const linking = {
   prefixes: [Linking.createURL("/"), "https://galarieslafayette.com"],
@@ -113,11 +119,28 @@ const linking = {
 
 
 const App = () => {
+  const publishableKey = "pk_test_51QlWNSKg6trUSKRbEs4kpLNwX0CeWTm5wAIzemOIIyktAvc0TmWoygKt3t0MtaobMDsSmdfaUCmsaavPQRZEKsdh00g1Fy7Xzx";
+
   return (
-    <NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
+    <StripeProvider publishableKey = {publishableKey}>
+
+    <PaperProvider>
+       <CartProvider>
+    <FavouritesProvider>
+     
+   
+    <NavigationContainer linking={linking} fallback={<GaleriesLoader/>}>
       <DrawerNavigator />
     </NavigationContainer>
+    
+     </FavouritesProvider>
+     </CartProvider>
+    </PaperProvider>
+    </StripeProvider>
   );
 };
 
 export default App;
+
+
+

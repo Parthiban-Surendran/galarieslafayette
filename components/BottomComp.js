@@ -47,7 +47,6 @@ const socialIcons = ["facebook", "instagram", "pinterest", "tiktok"];
 export default function BottomComp() {
   return (
     <View style={styles.container}>
-      {/* TOP MENU */}
       <FlatList
         data={data}
         keyExtractor={(item) => item.id}
@@ -63,7 +62,6 @@ export default function BottomComp() {
         )}
       />
 
-      {/* SECTIONS */}
       <View style={styles.sectionContainer}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Services</Text>
@@ -102,14 +100,12 @@ export default function BottomComp() {
         </View>
       </View>
 
-      {/* SOCIAL MEDIA */}
       <View style={styles.socialContainer}>
         {socialIcons.map((icon, index) => (
           <FontAwesome5 key={index} name={icon} size={20} color="#fff" style={styles.socialIcon} />
         ))}
       </View>
 
-      {/* FOOTER LINKS */}
       <View style={styles.footer}>
         <Text style={styles.footerText}>CGV</Text>
         <Text style={styles.footerText}>Loyalty Program Terms and Conditions</Text>

@@ -182,247 +182,256 @@
 
 
 
-
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView ,FlatList} from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  FlatList,
+} from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import Swiper from "react-native-swiper";
-import shoe from '../assets/shoe.png';
 import TopLineText from "../components/TopLineText";
 import Header from "../components/Header";
 import SearchBar from "../components/SearchBar";
-import { FontAwesome, FontAwesome5, FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import LuxuryCard from "../components/LuxuryCard";
 import BottomComp from "../components/BottomComp";
-import { Feather } from "@expo/vector-icons";
+import { useCart } from "../context/CartContext";
+import useCategoryManager from "../hooks/useCategoryManager";
 
-const ProductPage = ({navigation,route}) => {
-  const {product} = route.params;
-  console.log("Products:",product)
+const ProductPage = ({ navigation, route }) => {
+  const { product } = route.params;
+  const { addItemToCart,fetchBannerProducts } = useCategoryManager();
+
+  const handlePressBanner44 = async (categoryId) => {
+    setLoading(true); // Show loader
+    try {
+        const data = await fetchBannerProducts(categoryId);
+        navigation.navigate('Dashboard', {
+            screen: 'DashboardMain',
+            params: { products: data }
+        });
+    } catch (error) {
+        console.error('Error fetching banner products:', error);
+    } finally {
+        setLoading(false); 
+    }
+};
+
+  
+
+  const { addToCart } = useCart();
   const [selectedSize, setSelectedSize] = useState("One Size");
   const [selectedQuantity, setSelectedQuantity] = useState("1");
   const [expandedSections, setExpandedSections] = useState({
     details: false,
     delivery: false,
   });
+  const [loading, setLoading] = useState(false);
 
   const toggleSection = (section) => {
     setExpandedSections((prev) => ({
       ...prev,
-      [section]: !prev[section], // Toggle state
+      [section]: !prev[section],
     }));
   };
 
   const handleStores = () => {
-    navigation.navigate('Stores');
-  }
+    navigation.navigate("Stores");
+  };
 
+  // Header Component for FlatList: all static content on top
+  const ListHeader = () => (
+    <>
+      <TopLineText />
+      <Header />
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.backButtonOverImage}
+      >
+        <Feather name="arrow-left" size={24} color="#000" />
+      </TouchableOpacity>
 
-  // const products = [
-  //   {
-  //     id: "1",
-  //     name: "Bob Sport Uni",
-  //     brand: "MARINE SERRE",
-  //     price: "210,00 €",
-  //     image: "https://your-image-url.com/bob-sport-uni.jpg", // Replace with actual image URL
-  //   },
-  //   {
-  //     id: "2",
-  //     name: "Eclips moons mini leather satchel bag",
-  //     brand: "MARINE SERRE",
-  //     price: "600,00 €",
-  //     image: "https://your-image-url.com/satchel-bag.jpg", // Replace with actual image URL
-  //   },
-  //   {
-  //     id: "3",
-  //     name: "Vegetable belt in shiny leather",
-  //     brand: "MARINE SERRE",
-  //     price: "250,00 €",
-  //     image: "https://your-image-url.com/belt.jpg", // Replace with actual image URL
-  //   },
-  //   {
-  //     id: "4",
-  //     name: "Moon signature long gloves in recycled jersey",
-  //     brand: "MARINE SERRE",
-  //     price: "200,00 €",
-  //     image: "https://your-image-url.com/gloves.jpg", // Replace with actual image URL
-  //   },
-  // ];
-
-  return (
-    <ScrollView style={styles.container}>
-        <TopLineText/>
-        <Header/>
-        <SearchBar/>
-      {/* Image Slider */}
-      <Swiper style={styles.imageSlider} showsPagination={true} >
-        <Image source={shoe} style={styles.productImage} />
-        <Image source={shoe} style={styles.productImage} />
-        <Image source={shoe} style={styles.productImage} />
+      <Swiper style={styles.imageSlider} showsPagination={true}>
+        <Image source={{ uri: product.imageUrl }} style={styles.productImage} />
+        <Image source={{ uri: product.imageUrl }} style={styles.productImage} />
+        <Image source={{ uri: product.imageUrl }} style={styles.productImage} />
       </Swiper>
 
-      {/* Product Details */}
       <View style={styles.detailsContainer}>
         <Text style={styles.brand}>{product.brand}</Text>
-        <Text style={styles.productName}>{product.name}</Text>
-        <Text style={styles.price}>{product.price} </Text>
+        <Text style={styles.productName}>{product.productName}</Text>
+        <Text style={styles.price}>{product.price}€</Text>
 
-        {/* Size Selection */}
         <Text style={styles.label}>Size</Text>
         <View style={styles.selectionBox}>
-          <Picker selectedValue={selectedSize} onValueChange={(itemValue) => setSelectedSize(itemValue)}>
+          <Picker
+            selectedValue={selectedSize}
+            onValueChange={(itemValue) => setSelectedSize(itemValue)}
+          >
             <Picker.Item label="One Size" value="One Size" />
           </Picker>
         </View>
 
-        {/* Quantity Selection */}
-        <Text style={styles.label}>Quantity</Text>
-        <View style={styles.selectionBox}>
-          <Picker selectedValue={selectedQuantity} onValueChange={(itemValue) => setSelectedQuantity(itemValue)}>
-            <Picker.Item label="1" value="1" />
-            <Picker.Item label="2" value="2" />
-            <Picker.Item label="3" value="3" />
-          </Picker>
-        </View>
-
-        {/* Add to Cart Button */}
-        <TouchableOpacity style={styles.addToCartButton}>
+        <TouchableOpacity
+          style={styles.addToCartButton}
+          onPress={() => {
+            alert("Added to Cart Successfully");
+            addItemToCart(product);
+          }}
+        >
           <Text style={styles.addToCartText}>ADD TO CART</Text>
         </TouchableOpacity>
 
-         {/* Delivery & Returns Section */}
-         <View style={styles.deliveryContainer}>
-          <Text style={styles.deliveryTitle}>Sold and shipped by <Text style={styles.boldText}>Galeries Lafayette</Text></Text>
-          <Text style={styles.subText}><FontAwesome name='check' size={18} color="green" /> In-store pickup: <Text style={styles.highlightText}>Free - within 24 to 48 working hours</Text></Text>
-          <Text style={styles.subText}><FontAwesome name='truck' size={18} color="#000" /> Standard home delivery: <Text style={styles.highlightText}>Free from 75,00 € or 5,90 € - within 2 to 4 working days</Text></Text>
+        <View style={styles.deliveryContainer}>
+          <Text style={styles.deliveryTitle}>
+            Sold and shipped by{" "}
+            <Text style={styles.boldText}>Galeries Lafayette</Text>
+          </Text>
+          <Text style={styles.subText}>
+            <FontAwesome name="check" size={18} color="green" /> In-store pickup:{" "}
+            <Text style={styles.highlightText}>
+              Free - within 24 to 48 working hours
+            </Text>
+          </Text>
+          <Text style={styles.subText}>
+            <FontAwesome name="truck" size={18} color="#000" /> Standard home
+            delivery:{" "}
+            <Text style={styles.highlightText}>
+              Free from 75,00 € or 5,90 € - within 2 to 4 working days
+            </Text>
+          </Text>
           <TouchableOpacity>
             <Text style={styles.linkText}>See all delivery options</Text>
           </TouchableOpacity>
-          <Text style={styles.subText}><FontAwesome6 name='box-archive' size={18} color="#000" /> Free returns within 30 days</Text>
+          <Text style={styles.subText}>
+            <FontAwesome6 name="box-archive" size={18} color="#000" /> Free returns
+            within 30 days
+          </Text>
         </View>
 
-        {/* Store Availability */}
         <View style={styles.storeAvailabilityContainer}>
-          <Text style={styles.storeAvailabilityText}><FontAwesome6 name='location-dot' size={18} color="#000" />  Check the availability of the item in store</Text>
-          <TouchableOpacity style={styles.chooseStoreButton} onPress={handleStores}>
+          <Text style={styles.storeAvailabilityText}>
+            <FontAwesome6 name="location-dot" size={18} color="#000" /> Check the
+            availability of the item in store
+          </Text>
+          <TouchableOpacity
+            style={styles.chooseStoreButton}
+            onPress={handleStores}
+          >
             <Text style={styles.chooseStoreText}>CHOOSE A STORE</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.paymentMethodsContainer}>
-        <Text style={styles.paymentMethodsTitle}>Accepted payment methods:</Text>
-        <ScrollView style={{paddingBottom:20}} nestedScrollEnabled={true} horizontal showsHorizontalScrollIndicator={false}>
-          <Image source={require("../assets/visa.png")} style={styles.paymentIcon} />
-          <Image source={require("../assets/visa.png")} style={styles.paymentIcon} />
-          <Image source={require("../assets/visa.png")} style={styles.paymentIcon} />
-          <Image source={require("../assets/visa.png")} style={styles.paymentIcon} />
-          <Image source={require("../assets/visa.png")} style={styles.paymentIcon} />
-          <Image source={require("../assets/visa.png")} style={styles.paymentIcon} />
-        </ScrollView>
+          <Text style={styles.paymentMethodsTitle}>
+            Accepted payment methods:
+          </Text>
+          {/* Add your payment icons here */}
+          <View style={{ flexDirection: "row" }}>
+            <Image
+              source={require("../assets/visa.png")}
+              style={styles.paymentIcon}
+            />
+            <Image
+              source={require("../assets/visa.png")}
+              style={styles.paymentIcon}
+            />
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={styles.sectionContainer}
+          onPress={() => toggleSection("details")}
+        >
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={styles.sectionTitle}>Details and composition</Text>
+                <Feather
+                  name={expandedSections.details ? "chevron-up" : "chevron-down"}
+                  size={24}
+                  color="black"
+                />
+          </View>
+
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.sectionContainer}
+          onPress={() => toggleSection("delivery")}
+        >
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+
+          <Text style={styles.sectionTitle}>Delivery options</Text>
+          <Feather
+            name={expandedSections.delivery ? "chevron-up" : "chevron-down"}
+            size={24}
+            color="black"
+          />
+          </View>
+        </TouchableOpacity>
       </View>
+    </>
+  );
 
-      {/* Expandable Sections */}
-       <TouchableOpacity 
-        style={styles.sectionContainer} 
-        onPress={() => toggleSection("details")}
+  // Footer Component for FlatList: for "See More Articles" and other content
+  const ListFooter = () => (
+    <>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          handlePressBanner44(product.category.categoryId)
+        }}
       >
-        <Text style={styles.sectionTitle}>Details and composition</Text>
-        <Feather
-          name={expandedSections.details ? "chevron-up" : "chevron-down"}
-          size={24}
-          color="black"
-        />
-      </TouchableOpacity>
-
-      <TouchableOpacity 
-        style={styles.sectionContainer} 
-        onPress={() => toggleSection("delivery")}
-      >
-        <Text style={styles.sectionTitle}>Delivery options</Text>
-        <Feather
-          name={expandedSections.delivery ? "chevron-up" : "chevron-down"}
-          size={24}
-          color="black"
-        />
-      </TouchableOpacity>
-      
-
-      <Text style={styles.heading}>Also discover</Text>
-      <FlatList
-        data={product}
-        keyExtractor={(item) => item.id}
-        numColumns={2}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={styles.card}>
-            <Image source={require('../assets/shoe.png')} style={styles.image} />
-            <Text style={styles.brand}>{item.brand}</Text>
-            <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.price}>{item.price}</Text>
-          </TouchableOpacity>
-        )}
-      />
-      <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>SEE MORE ARTICLES</Text>
-      </TouchableOpacity>    
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center",marginRight:20 }}>
-  <LuxuryCard />
-</View>
+      </TouchableOpacity>
+      <BottomComp />
+    </>
+  );
 
-
-      </View>
-      <BottomComp/>
-    </ScrollView>
+  return (
+    <FlatList
+      style={styles.container}
+      data={product.relatedProducts || []}
+      keyExtractor={(item, index) =>
+        item.productId ? item.productId.toString() : index.toString()
+      }
+      numColumns={2}
+      columnWrapperStyle={{ justifyContent: "space-between", paddingHorizontal: 10 }}
+      ListHeaderComponent={ListHeader}
+      ListFooterComponent={ListFooter}
+      renderItem={({ item }) => (
+        <TouchableOpacity
+          style={styles.card}
+          onPress={() => navigation.push("ProductPage", { product: item })}
+        >
+          <Image source={{ uri: item.imageUrl }} style={styles.image} />
+          <Text style={styles.brand}>{item.brand}</Text>
+          <Text style={styles.name}>{item.productName}</Text>
+          <Text style={styles.price}>{item.price}€</Text>
+        </TouchableOpacity>
+      )}
+    />
   );
 };
 
 const styles = StyleSheet.create({
-      highlightText: {
-        fontWeight: "bold",
-        color: "#008000",
-      },
-      
-      storeAvailabilityContainer: {
-        marginTop: 20,
-        borderWidth: 1,
-        padding: 15,
-        borderRadius: 5,
-        borderColor: "#ddd",
-        alignItems: "center",
-      },
-      storeAvailabilityText: {
-        fontSize: 16,
-        textAlign: "center",
-        marginBottom: 10,
-      },
-      chooseStoreButton: {
-        borderWidth: 1,
-        borderColor: "#000",
-        padding: 12,
-        alignItems: "center",
-        borderRadius: 25,
-        width: "100%",
-      },
-      chooseStoreText: {
-        fontSize: 16,
-        fontWeight: "bold",
-      },
-      paymentMethodsContainer: {
-        marginTop: 20,
-        alignItems: "center",
-      },
-      paymentMethodsTitle: {
-        fontSize: 16,
-        fontWeight: "bold",
-        marginBottom: 10,
-      },
-      paymentIcon: {
-        width: "100%",
-        height: 50,
-        resizeMode: "contain",
-      },
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  // Header and general UI styles
+  backButtonOverImage: {
+    position: "absolute",
+    top: 105,
+    left: 10,
+    zIndex: 999,
+    backgroundColor: "#ffffffaa",
+    padding: 8,
+    borderRadius: 20,
   },
   imageSlider: {
     height: 400,
@@ -444,12 +453,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
     marginVertical: 4,
-  },
-  paymentIcon: {
-    width: 50,
-    height: 30,
-    marginHorizontal: 5,
-    resizeMode: "contain",
   },
   price: {
     fontSize: 20,
@@ -496,72 +499,95 @@ const styles = StyleSheet.create({
     color: "#007AFF",
     marginTop: 4,
   },
-  checkStoreButton: {
+  storeAvailabilityContainer: {
+    marginTop: 20,
+    borderWidth: 1,
+    padding: 15,
+    borderRadius: 5,
+    borderColor: "#ddd",
+    alignItems: "center",
+  },
+  storeAvailabilityText: {
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  chooseStoreButton: {
     borderWidth: 1,
     borderColor: "#000",
     padding: 12,
     alignItems: "center",
-    borderRadius: 5,
+    borderRadius: 25,
+    width: "100%",
+  },
+  chooseStoreText: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  paymentMethodsContainer: {
     marginTop: 20,
+    alignItems: "center",
   },
-  checkStoreText: {
+  paymentMethodsTitle: {
     fontSize: 16,
-    fontWeight: "bold",
-  },
-  sectionContainer: {
-    borderTopWidth: 1,
-    paddingVertical: 15,
-    paddingHorizontal: 16,
-    borderColor: "#ddd",
-    flexDirection:'row',
-    alignItems:'center',
-    justifyContent:'space-between'
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  sectionHeader: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginVertical: 10,
-    paddingHorizontal: 16,
-  },
-  heading: {
-    fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
   },
+  paymentIcon: {
+    width: 50,
+    height: 30,
+    marginHorizontal: 5,
+    resizeMode: "contain",
+  },
+  // Styles for related products list items
+  heading: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginVertical: 10,
+    paddingHorizontal: 10,
+  },
   card: {
     flex: 1,
+    backgroundColor: "#f9f9f9",
     margin: 5,
+    borderRadius: 10,
+    padding: 10,
     alignItems: "center",
+    maxWidth: "48%",
   },
   image: {
     width: "100%",
     height: 150,
     borderRadius: 10,
-  },
-  brand: {
-    fontSize: 12,
-    fontWeight: "bold",
-    marginTop: 5,
+    marginBottom: 8,
   },
   name: {
     fontSize: 12,
     color: "#555",
     textAlign: "center",
   },
+  // Duplicate brand style for related products; you can rename if needed
+  // or merge with the above one if they are the same.
+  brand: {
+    fontSize: 12,
+    fontWeight: "bold",
+    marginTop: 5,
+    textAlign: "center",
+  },
   price: {
     fontSize: 14,
     fontWeight: "bold",
     marginTop: 5,
+    textAlign: "center",
   },
   button: {
     marginTop: 10,
     padding: 10,
     backgroundColor: "#000",
     borderRadius: 20,
+    width:'70%',
+    marginLeft:50,
+   marginBottom:20,
     alignItems: "center",
   },
   buttonText: {

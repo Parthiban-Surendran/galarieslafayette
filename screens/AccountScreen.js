@@ -14,7 +14,6 @@ const AccountScreen = ({ navigation }) => {
 
     const handleLogout = () => {
         setIsLoggedIn(false);
-        console.log('User loghandleAccountged out'); 
         navigation.navigate('Home');
     };
     

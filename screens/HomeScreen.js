@@ -383,12 +383,13 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, FlatList, Text, Image,TouchableOpacity } from 'react-native';
+import { StyleSheet, View, FlatList, Text, Image,TouchableOpacity, Touchable } from 'react-native';
 import ProductCard from '../components/ProductCard';
 import SearchBar from '../components/SearchBar';
 import Header from '../components/Header';
 import TopLineText from '../components/TopLineText';
 import BackgroundBanner from '../components/BackgroundBanner';
+import hero from '../assets/hero.mp4';
 
 import imageWomen from "../assets/categoriesimg.png";
 import imageMen from "../assets/categoriesimg1.png";
@@ -407,10 +408,14 @@ import CardProduct from '../components/CardProduct';
 import card3 from '../assets/card3.png';
 import BottomComp from '../components/BottomComp';
 import CategoryComponent from '../components/CategoryComponent';
+import useCategoryManager from '../hooks/useCategoryManager';
+import GaleriesLoader  from '../components/GaleriesLoader';
+
 
 const HomeScreen = ({ navigation }) => {
     const [products, setProducts] = useState([]);
     const [cardProducts, setCardProducts] = useState([]);
+    const {fetchTopProducts,fetchBannerProducts,banner} = useCategoryManager();
     const categoriess = [
         "Women's bags", "Women's wallets", "Robes", "Evening dresses", "Women's jumpsuits",
         "Women's shirts", "Women's sweaters", "Women's sweatshirts", "Women's pants", "Women's jeans",
@@ -427,48 +432,79 @@ const HomeScreen = ({ navigation }) => {
 
     const [categories, setCategories] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [loading,setLoading] = useState(false);
+
+    const handlePressBanner44 = async (categoryId) => {
+        setLoading(true); // Show loader
+        try {
+            const data = await fetchBannerProducts(categoryId);
+            navigation.navigate('Dashboard', {
+                screen: 'DashboardMain',
+                params: { products: data }
+            });
+        } catch (error) {
+            console.error('Error fetching banner products:', error);
+        } finally {
+            setLoading(false); // Hide loader regardless of success/failure
+        }
+    };
+    
 
     useEffect(() => {
-        // Dummy product data
-        const dummyProducts = [
-            { id: '1', name: 'Elegant Dress', price: 79.99, image: productimg, category: 'Clothing' },
-            { id: '2', name: 'Leather Handbag', price: 129.50, image: productimg, category: 'Accessories' },
-            { id: '3', name: 'Stylish Watch', price: 249.00, image: productimg, category: 'Accessories' },
-            { id: '4', name: 'Cozy Sweater', price: 59.99, image: productimg, category: 'Clothing' },
-        ];
+        const loadProducts = async () => {
+            try {
+                const latestProducts = await fetchTopProducts();
+                setProducts(latestProducts);
+            } catch (error) {
+                console.error('Failed to fetch latest products:', error);
+            }
+        };
+    
+        loadProducts();
 
+
+    
+        // Set card products
         const cardProducts = [
-            { id: '1', name: 'BirkenStock', image: card2, },
-            { id: '2', name: 'BirkenStock', image: card2, },
-
-            { id: '3', name: 'BirkenStock', image: card2, },
-
-            { id: '4', name: 'BirkenStock', image: card2, },
-
+            { id: '1', name: 'BirkenStock', image: card2 },
+            { id: '2', name: 'BirkenStock', image: card2 },
+            { id: '3', name: 'BirkenStock', image: card2 },
+            { id: '4', name: 'BirkenStock', image: card2 },
         ];
         setCardProducts(cardProducts);
-        setProducts(dummyProducts);
-
-        // Category data
+    
+        // Set categories
         setCategories([
-            { id: "1", name: "Women", image: imageWomen,title:'Femme' },
-            { id: "2", name: "Men", image: imageMen,title:'Homme' },
-            { id: "3", name: "Child", image: imageChild,title:'Enfant' },
-            { id: "4", name: "Beauty", image: imageBeauty,title:'Beaute'},
-            { id: "5", name: "Home", image: imageHome,title:'Maison' },
-            { id: "6", name: "Luxe", image: imageLuxe,title:'Nouveautes' }
+            { id: "1", name: "Women", image: imageWomen, title: 'Femme' },
+            { id: "2", name: "Men", image: imageMen, title: 'Homme' },
+            { id: "3", name: "Child", image: imageChild, title: 'Enfant' },
+            { id: "4", name: "Beauty", image: imageBeauty, title: 'Beaute' },
+            { id: "5", name: "Home", image: imageHome, title: 'Maison' },
+            { id: "6", name: "Luxe", image: imageLuxe, title: 'Nouveautes' }
         ]);
     }, []);
+    
 
     const handleSearch = (text) => {
         setSearchTerm(text);
     };
 
     const filteredProducts = products.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+        product.productName.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const renderProduct = ({ item }) => <ProductCard product={item} onPress={()=>{navigation.navigate('Product')}} />;
+    const renderProduct = ({ item }) => (
+        <ProductCard
+          product={item}
+          onPress={() => {
+            navigation.navigate('Product', {
+              screen: 'Product',
+              params: { product: item } // pass product as param
+            });
+          }}
+        />
+      );
+      
     const renderCardProduct = ({ item }) => <CardProduct product={item} />;
 
 
@@ -484,29 +520,44 @@ const HomeScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+           {loading && (
+  <View style={styles.loaderOverlay}>
+    <GaleriesLoader />
+  </View>
+)}
+
             <View style={{height:800,backgroundColor:'#fff'}}>
+           
             <FlatList
+            
                 ListHeaderComponent={
                     <>
+                     
                         <TopLineText />
                         <Header />
                         <View style={{padding:10}}>
                             <SearchBar onSearch={handleSearch} />
 
                         </View>
-                        
-                        {/* Categories Section */}
+                        <BackgroundBanner
+                            videoSource={hero}
+                            heading="THE 3 JOURNEYS"
+                            subheading="-30%, -40% and more on a collection"
+                            buttonText="TAKE ADVANTAGE OF IT"
+                            onPress={()=>handlePressBanner44(13)}
+                            />
+
+                                                    
                         <View style={styles.categoriesContainer}>
-                            <CategoryComponent/>
+                        <CategoryComponent onCategoryPress={handlePressBanner44} showLoader={() => setLoading(true)} closeLoader={() => setLoading(false)}  navigation={navigation} />
                         </View>
 
-                        {/* Banners */}
                         <BackgroundBanner
                             imageSource={banner2}
                             heading="Welcome to Our Store"
                             subheading="Discover the latest trends"
                             buttonText="Shop Now"
-                            onPress={() => console.log('Button Pressed')}
+                            onPress={()=>handlePressBanner44(7)}
                         />
 
                         <BackgroundBanner
@@ -514,26 +565,24 @@ const HomeScreen = ({ navigation }) => {
                             heading="Exclusive Offers"
                             subheading="Grab the best deals now"
                             buttonText="Shop Now"
-                            onPress={() => console.log('Button Pressed')}
+                            onPress={()=>handlePressBanner44(11)}
                         />
 
-                        {/* Latest Products */}
                         <Text style={styles.sectionTitle}>Latest Products</Text>
                     </>
                 }
                 data={filteredProducts}
                 renderItem={renderProduct}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item.productId}
                 numColumns={2}
                 contentContainerStyle={styles.productListContent}
                 ListFooterComponent={
                     <>
                         {/* See More Section */}
                         <View style={{backgroundColor:'#FFFFFF'}} >
-                            <View style={styles.seemore}>
+                            <TouchableOpacity style={styles.seemore} onPress={()=>{handlePressBanner44(44)}}>
                                 <Text style={styles.seemoreText}>See More Articles</Text>
-                            </View>
-
+                    </TouchableOpacity>
                             {/* Repeated Banners */}
                             
 
@@ -542,21 +591,21 @@ const HomeScreen = ({ navigation }) => {
                                 heading="Best Sellers"
                                 subheading="Shop the most popular products"
                                 buttonText="View More"
-                                onPress={() => console.log('Button Pressed')}
-                            />
+                                onPress={()=>handlePressBanner44(12)}
+                                />
 
                             {/* Repeated Products */}
                             <Text style={styles.sectionTitle}>More Products</Text>
                             <FlatList
                                 data={filteredProducts}
                                 renderItem={renderProduct}
-                                keyExtractor={item => item.id}
+                                keyExtractor={item => item.productId}
                                 numColumns={2}
                                 contentContainerStyle={styles.productListContent}
                             />
-                            <View style={styles.seemore}>
-                                <Text style={styles.seemoreText}>See More Articles</Text>
-                            </View>
+                            <TouchableOpacity style={styles.seemore} onPress={()=>{handlePressBanner44(44)}}>
+                            <Text style={styles.seemoreText}>See More Articles</Text>
+                            </TouchableOpacity>
 
 
 
@@ -568,29 +617,29 @@ const HomeScreen = ({ navigation }) => {
                                 heading="Best Sellers"
                                 subheading="Shop the most popular products"
                                 buttonText="View More"
-                                onPress={() => console.log('Button Pressed')}
-                            />
+                                onPress={()=>handlePressBanner44(51)}
+                                />
 
                             {/* Repeated Products */}
                             <Text style={styles.sectionTitle}>More Products</Text>
                             <FlatList
                                 data={filteredProducts}
                                 renderItem={renderProduct}
-                                keyExtractor={item => item.id}
+                                keyExtractor={item => item.productId}
                                 numColumns={2}
                                 contentContainerStyle={styles.productListContent}
                             />
-                            <View style={styles.seemore}>
-                                <Text style={styles.seemoreText}>See More Articles</Text>
-                            </View>
+                            <TouchableOpacity style={styles.seemore} onPress={()=>{handlePressBanner44(45)}}>
+                            <Text style={styles.seemoreText}>See More Articles</Text>
+                            </TouchableOpacity>
 
                             <BackgroundBanner
                                 imageSource={banner5}
                                 heading="Best Sellers"
                                 subheading="Shop the most popular products"
                                 buttonText="View More"
-                                onPress={() => console.log('Button Pressed')}
-                            />
+                                onPress={()=>handlePressBanner44(55)}
+                                />
 
                             <BackgroundBanner
                                 videoSource={require('../assets/backgroundvid.mp4')}  // Provide video source
@@ -598,15 +647,15 @@ const HomeScreen = ({ navigation }) => {
                                 heading="Best Sellers"
                                 subheading="Shop the most popular products"
                                 buttonText="View More"
-                                onPress={() => console.log('Button Pressed')}
-                            />
+                                onPress={()=>handlePressBanner44(59)}
+                                />
 
                             {/* Repeated Products */}
                             <Text style={styles.sectionTitle}>More Products</Text>
                             <FlatList
                                 data={filteredProducts}
                                 renderItem={renderProduct}
-                                keyExtractor={item => item.id}
+                                keyExtractor={item => item.productId}
                                 numColumns={2}
                                 contentContainerStyle={styles.productListContent}
                             />
@@ -615,37 +664,18 @@ const HomeScreen = ({ navigation }) => {
                             <FlatList
                                 data={filteredProducts}
                                 renderItem={renderProduct}
-                                keyExtractor={item => item.id}
+                                keyExtractor={item => item.productId}
                                 numColumns={2}
                                 contentContainerStyle={styles.productListContent}
                             />
-                            <View style={styles.carouselcont1}>
-                                <Image source={card2}style={styles.carouselimg1}/>
-                                <Text style={[styles.Heading1,{marginTop:10},{marginLeft:20},{color:'black'}]}>Harness</Text>
-                                <Text style={[styles.Heading1,{color:'black'},{marginLeft:20},{fontWeight:200},{fontSize:18}]}>The modern Software Delivery</Text>
-                            </View>
-                            <View style={styles.carouselcont1}>
-                                <Image source={card2}style={styles.carouselimg1}/>
-                                <Text style={[styles.Heading1,{marginTop:10},{marginLeft:20},{color:'black'}]}>Harness</Text>
-                                <Text style={[styles.Heading1,{color:'black'},{marginLeft:20},{fontWeight:200},{fontSize:18}]}>The modern Software Delivery</Text>
-                            </View>
-                            <View style={styles.carouselcont1}>
-                                <Image source={card2}style={styles.carouselimg1}/>
-                                <Text style={[styles.Heading1,{marginTop:10},{marginLeft:20},{color:'black'}]}>Harness</Text>
-                                <Text style={[styles.Heading1,{color:'black'},{marginLeft:20},{fontWeight:200},{fontSize:18}]}>The modern Software Delivery</Text>
-                            </View>
-                            <View style={styles.carouselcont1}>
-                                <Image source={card2}style={styles.carouselimg1}/>
-                                <Text style={[styles.Heading1,{marginTop:10},{marginLeft:20},{color:'black'}]}>Harness</Text>
-                                <Text style={[styles.Heading1,{color:'black'},{marginLeft:20},{fontWeight:200},{fontSize:18}]}>The modern Software Delivery</Text>
-                            </View>
+                            
                             <BackgroundBanner
                                 imageSource={card3}
                                 heading="Best Sellers"
                                 subheading="Shop the most popular products"
                                 buttonText="View More"
-                                onPress={() => console.log('Button Pressed')}
-                            />
+                                onPress={()=>handlePressBanner44(73)}
+                                />
                             <Text style={[styles.Heading1,{marginTop:10},{marginLeft:20},{color:'black'}]}>Our best selections</Text>
                             <View style={styles.containers}>
                                 <FlatList
@@ -654,7 +684,7 @@ const HomeScreen = ({ navigation }) => {
                                     numColumns={2} // Set 2 columns
                                     columnWrapperStyle={styles.row} // Space between columns
                                     renderItem={({ item }) => (
-                                    <TouchableOpacity style={styles.item} onPress={() => console.log(item)}>
+                                    <TouchableOpacity style={styles.item}>
                                         <Text style={styles.text}>{item}</Text>
                                     </TouchableOpacity>
                                     )}
@@ -772,6 +802,19 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 21,
       },
+      loaderOverlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgb(255, 255, 255)', // Optional: dim the background
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 999, // make sure it's on top
+        elevation: 10, // Android-specific stacking
+      },
+      
 });
 
 export default HomeScreen;

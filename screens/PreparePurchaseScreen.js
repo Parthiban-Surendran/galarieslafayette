@@ -29,15 +29,14 @@ const purchaseOptions = [
 
 const PreparePurchaseScreen = () => {
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} nestedScrollEnabled={true}>
             <TopLineText />
             <Header />
             <SearchBar />
             <View style={{ padding: 10 }}>
-                {/* Section Title */}
+
                 <Text style={styles.sectionTitle}>Prepare your purchases</Text>
 
-                {/* Purchase Options */}
                 {purchaseOptions.map((item) => (
                     <TouchableOpacity key={item.id} style={styles.optionContainer}>
                         <Image source={item.image} style={styles.image} />

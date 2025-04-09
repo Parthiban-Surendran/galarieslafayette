@@ -6,13 +6,11 @@ const CardProduct = ({ product, onPress }) => {
 
     return (
         <TouchableOpacity style={styles.card} onPress={onPress}>
-            {/* Product Image */}
             <Image 
                 style={styles.image} 
-                source={product.image} // Ensure proper image loading
+                source={product.image} 
             />
 
-            {/* Product Details */}
             <Text style={styles.title}>{product.name}</Text>
         </TouchableOpacity>
     );

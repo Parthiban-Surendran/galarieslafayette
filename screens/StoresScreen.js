@@ -17,11 +17,9 @@ const Stores = () => {
       phone: '+33142823456',
       closingTime: '8:30 p.m.',
     },
-    // Add more stores if needed
   ];
 
   const handleSearch = () => {
-    console.log(storeData[0].name.toLowerCase())
     const filteredStores = storeData.filter(store =>
       store.name.toLowerCase().includes(searchText.toLowerCase())
     );
@@ -33,7 +31,6 @@ const Stores = () => {
       <TopLineText/>
       <Header/>
       <View style={{ padding: 20 }}>
-        {/* Search Section */}
         <View style={styles.searchContainer}>
           <Text style={styles.title}>Find a store</Text>
           <Text>Enter your location</Text>
@@ -53,7 +50,6 @@ const Stores = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Search Results */}
         {results.length > 0 && (
           <View style={styles.resultsContainer}>
             <Text style={styles.resultText}>{results.length} Results near your location</Text>

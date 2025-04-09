@@ -231,13 +231,11 @@ const AccountSection = ({ userName, status, menuItems, onBackPress, onLogout }) 
                         <Header />
                         <SearchBar onSearch={handleSearch} />
 
-                        {/* Header */}
                         <TouchableOpacity style={styles.backButton} onPress={onBackPress}>
                             <MaterialIcons name="arrow-back" size={24} color="black" />
                             <Text style={styles.backText}>Welcome {'>'} Votre compte</Text>
                         </TouchableOpacity>
 
-                        {/* User Greeting */}
                         <View style={styles.userContainer}>
                             <Text style={styles.greeting}>Hello {userName}</Text>
                             <Text style={styles.status}>
@@ -245,7 +243,6 @@ const AccountSection = ({ userName, status, menuItems, onBackPress, onLogout }) 
                             </Text>
                         </View>
 
-                        {/* Loyalty Section */}
                         <View style={styles.loyaltyCard}>
                             <View style={{ flexDirection: 'row', gap: 10 }}>
                                 <Text style={styles.loyaltyText}>

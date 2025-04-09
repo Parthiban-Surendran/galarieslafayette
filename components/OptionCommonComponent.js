@@ -221,50 +221,53 @@
 
 
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Image, Text, TouchableOpacity, StyleSheet, FlatList } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import productimg from "../assets/productimg.png";
 import ProductCard from "./ProductCard";
 import BottomComp from "./BottomComp";
-import imageWomen from "../assets/categoriesimg.png";
-import imageMen from "../assets/categoriesimg1.png";
-import imageChild from "../assets/categoriesimg2.png";
-import imageBeauty from "../assets/categoriesimg3.png";
-import imageHome from "../assets/categoriesimg4.png";
-import imageLuxe from "../assets/categoriesimg5.png";
-
-export default function OptionCommonComponent({ navigation, title,extra ,onBackPress}) {
-
+import useCategoryManager from "../hooks/useCategoryManager";
+export default function OptionCommonComponent({ navigation, title, extra, onBackPress, customContent }) {
+    const {fetchTopProducts} = useCategoryManager();
     // Dummy product suggestions
-    const dummyProducts = [
-        { id: "1", name: "Elegant Dress", price: 79.99, image: productimg, category: "Clothing" },
-        { id: "2", name: "Leather Handbag", price: 129.5, image: productimg, category: "Accessories" },
-        { id: "3", name: "Stylish Watch", price: 249.0, image: productimg, category: "Accessories" },
-        { id: "4", name: "Cozy Sweater", price: 59.99, image: productimg, category: "Clothing" },
-    ];
+    const [dummyProducts,setDummyProducts] = useState();
+    const handlePressBanner44 = async (categoryId) => {
+        setLoading(true); // Show loader
+        try {
+            const data = await fetchBannerProducts(categoryId);
+            navigation.navigate('Dashboard', {
+                screen: 'DashboardMain',
+                params: { products: data }
+            });
+        } catch (error) {
+            console.error('Error fetching banner products:', error);
+        } finally {
+            setLoading(false); // Hide loader regardless of success/failure
+        }
+    };
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await fetchTopProducts();
+            setDummyProducts(data);
+        };
+        fetchData();
+    }, []);
+    
 
-    const categories = [
-        { id: "1", name: "Women", image: imageWomen },
-        { id: "2", name: "Men", image: imageMen },
-        { id: "3", name: "Child", image: imageChild },
-        { id: "4", name: "Beauty", image: imageBeauty },
-        { id: "5", name: "Home", image: imageHome },
-        { id: "6", name: "Luxe", image: imageLuxe }
-    ];
+    
 
     const renderCategory = ({ item }) => (
         <View style={styles.categoryItem}>
-            <Image source={item.image} style={styles.categoryImage} />
-            <Text style={styles.categoryText}>{item.name}</Text>
+            <Image source={{uri:item.imageUrl}} style={styles.categoryImage} />
+            <Text style={styles.categoryText}>{item.productName}</Text>
         </View>
     );
 
     return (
         <View style={styles.container}>
-            {/* BACK BUTTON & BREADCRUMB */}
-
-            {/* Product List */}
+           
             <FlatList
                 ListHeaderComponent={
                     <>
@@ -276,18 +279,10 @@ export default function OptionCommonComponent({ navigation, title,extra ,onBackP
                                     <Text style={styles.breadcrumb}>Welcome {" > "} {title}</Text>
                                 </View>
 
-                                {/* BASKET TITLE */}
                                 <Text style={styles.title}>{title}</Text>
 
-                                {/* EMPTY MESSAGE */}
-                                <Text style={styles.subtitle}>Your {title.toLowerCase()} list does not have any items.</Text>
+                                {customContent}
 
-                                {/* START SHOPPING BUTTON */}
-                                <TouchableOpacity style={styles.button}>
-                                    <Text style={styles.buttonText}>START YOUR SHOPPING</Text>
-                                </TouchableOpacity>
-
-                                {/* Suggested Products */}
                                 <Text style={styles.suggestionTitle}>{extra}</Text>
                             </View>
 
@@ -295,28 +290,20 @@ export default function OptionCommonComponent({ navigation, title,extra ,onBackP
                 }
                 data={dummyProducts}
                 renderItem={({ item }) => <ProductCard product={item} />}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item.productId}
                 numColumns={2}
                 contentContainerStyle={styles.productListContent}
+
                 ListFooterComponent={
                  
                         <View style={{ backgroundColor: '#FFFFFF' }}>
-                            <TouchableOpacity style={[styles.button, styles.outlineButton, { padding: 20, marginBottom: 20 }]}>
+                            <TouchableOpacity style={[styles.button, styles.outlineButton, { padding: 20, marginBottom: 20 }]} onPress={()=>handlePressBanner44(59)}>
                                 <Text style={[styles.buttonText, styles.outlineButtonText]}>See More Articles</Text>
                             </TouchableOpacity>
-                            {title === 'Favourites' && <FlatList
-                                data={categories}
-                                renderItem={renderCategory}
-                                keyExtractor={(item) => item.id}
-                                numColumns={3}
-                                contentContainerStyle={styles.categoriesList}
-                                scrollEnabled={false}
-                            />
-                            }
+                            
                             <BottomComp />
                         </View>
-
-                        
+                     
                   
                 }
 
@@ -359,6 +346,8 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         alignItems: "center",
         marginTop: 20,
+        width:"70%",
+        marginLeft:60,
     },
     buttonText: {
         color: "#fff",

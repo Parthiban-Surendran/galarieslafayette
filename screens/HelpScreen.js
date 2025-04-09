@@ -31,7 +31,6 @@ export default function HelpScreen({ navigation }) {
 
           const handleLogout = () => {
             setIsLoggedIn(false);
-            console.log('User loghandleAccountged out'); 
             navigation.navigate('Home');
         };
         
@@ -39,14 +38,12 @@ export default function HelpScreen({ navigation }) {
     
     return (
         <ScrollView style={styles.container} nestedScrollEnabled={true}>
-            {/* Top Banner and Header */}
             <TopLineText />
             <Header />
 
             <View style={styles.innerContainer}>
                 <SearchBar />
 
-                {/* Breadcrumb Navigation */}
                 <View style={styles.breadcrumbContainer}>
                     <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
                         <Ionicons name="arrow-back" size={24} color="black" />
@@ -54,7 +51,6 @@ export default function HelpScreen({ navigation }) {
                     <Text style={styles.breadcrumbText}>Welcome {" > "} Help</Text>
                 </View>
 
-                {/* Ask Gala AI Section */}
                 <Text style={{ paddingHorizontal: 10, fontSize: 29, fontWeight: 'bold' }}>Help and Contact</Text>
                 <View style={styles.aiHelp}>
 
@@ -69,7 +65,6 @@ export default function HelpScreen({ navigation }) {
                     <Image source={require("../assets/help1.png")} style={styles.avatar} />
                 </View>
 
-                {/* Help Options */}
                 {helpOptions.map((item) => (
                     <TouchableOpacity key={item.id} style={styles.optionCard} onPress={item.onPress}>
                         <FontAwesome5 name={item.icon} size={20} color="black" style={styles.menuIcon} />
@@ -83,7 +78,6 @@ export default function HelpScreen({ navigation }) {
                     </TouchableOpacity>
                 ))}
 
-                {/* FAQ Section */}
                 <View style={styles.infoBox}>
                     <Text style={styles.infoTitle}>Frequently Asked Questions</Text>
                     <Text style={styles.infoSubtitle}>Question of the moment:</Text>
@@ -95,7 +89,6 @@ export default function HelpScreen({ navigation }) {
                     </TouchableOpacity>
                 </View>
 
-                {/* Write to Us Section */}
                 <View style={styles.infoBox}>
                     <Text style={styles.infoTitle}>Write to us</Text>
                     <TouchableOpacity style={styles.button}>
@@ -103,7 +96,6 @@ export default function HelpScreen({ navigation }) {
                     </TouchableOpacity>
                 </View>
 
-                {/* Call Our Advisors Section */}
                 <View style={styles.infoBox}>
                     <Text style={styles.infoTitle}>Call our advisors</Text>
                     <Text style={styles.phoneNumber}>09 69 39 75 75</Text>
@@ -116,7 +108,6 @@ export default function HelpScreen({ navigation }) {
                     </TouchableOpacity>
                 </View>
 
-                  {/* Contact Your Store Section */}
                   <View style={styles.infoBox}>
                     <Text style={styles.infoTitle}>Contact your store</Text>
                     <Text style={styles.infoSubtitle}>Contact your favorite store directly.</Text>

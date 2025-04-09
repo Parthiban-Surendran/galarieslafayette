@@ -38,15 +38,14 @@ export default function Header() {
                     <TouchableOpacity onPress={handlefavourites}>
                         <Feather name="heart" size={26} color="black" />
                     </TouchableOpacity>
-                    {/* Show "Login" if not logged in, otherwise show "Account" */}
-                    <TouchableOpacity onPress={isLoggedIn ? handleAccount : handlelogin}>
+                    {/* <TouchableOpacity onPress={isLoggedIn ? handleAccount : handlelogin}>
                         <Feather name="user" size={26} color="black" />
                         {isLoggedIn && (
                             <View style={styles.blueTick}>
                                 <Feather name="check" size={12} color="white" />
                             </View>
                         )}
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <TouchableOpacity onPress={handlebasket}>
                         <Feather name="shopping-bag" size={26} color="black" />
                     </TouchableOpacity>

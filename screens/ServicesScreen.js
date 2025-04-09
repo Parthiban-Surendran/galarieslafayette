@@ -171,7 +171,6 @@ export default function ServicesScreen() {
                     ))}
                 </View>
                 <View style={styles.content}>
-                    {/* A service for each of your desires */}
                     <Text style={styles.sectionTitle}>A service for each of your desires</Text>
                     <View style={styles.desiresGrid}>
                         {desiresServices.map((service) => (

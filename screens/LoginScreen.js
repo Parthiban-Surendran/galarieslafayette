@@ -67,7 +67,6 @@ const LoginScreen = ({ navigation, route }) => {
                 <Image source={require('../assets/cloudflare.png')} style={styles.cloudflare} />
             </View>
 
-            {/* Continue Button */}
             <TouchableOpacity style={styles.continueButton} onPress={handleLogin}>
                 <Text style={styles.continueText}>CONTINUE</Text>
             </TouchableOpacity>

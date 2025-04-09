@@ -89,11 +89,13 @@
 
 
 
-import React from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, Text, ImageBackground, StyleSheet, TouchableOpacity } from 'react-native';
 import Video from 'react-native-video';
+import useCategoryManager from '../hooks/useCategoryManager';
 
 const BackgroundBanner = ({ videoSource, imageSource, heading, subheading, buttonText, onPress }) => {
+    
     return (
         <View style={styles.container}>
             {imageSource ? (
@@ -108,7 +110,6 @@ const BackgroundBanner = ({ videoSource, imageSource, heading, subheading, butto
                 </ImageBackground>
             ) : (
                 <>
-                    {/* Video as background */}
                     <Video
                         source={videoSource}
                         style={styles.backgroundMedia}
@@ -119,8 +120,7 @@ const BackgroundBanner = ({ videoSource, imageSource, heading, subheading, butto
                         playInBackground
                     />
                     
-                    {/* Overlay on top of the video */}
-                    <View style={styles.overlay}>
+                    <View style={[styles.overlay,{backgroundColor:'rgba(236, 226, 226, 0.1)'}]}>
                         <Text style={styles.heading}>{heading}</Text>
                         <Text style={styles.subheading}>{subheading}</Text>
                         <TouchableOpacity style={styles.button} onPress={onPress}>

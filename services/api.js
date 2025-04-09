@@ -7,7 +7,6 @@ const api = axios.create({
   baseURL: API_URL,
 });
 
-// Fetch categories
 export const getCategories = async () => {
   try {
     const response = await api.get('/products/getDressFashion');
@@ -49,5 +48,6 @@ export const getProducts = async () => {
     throw new Error('Unable to fetch products');
   }
 };
+
 
 

@@ -43,6 +43,10 @@ import ServicesScreen from "../screens/ServicesScreen";
 import HelpScreen from "../screens/HelpScreen";
 import ServiceCommon from "../components/ServiceCommon";
 import PreparePurchaseScreen from "../screens/PreparePurchaseScreen";
+import AllProducts from "../screens/AllProductsScreen";
+import DashboardStack from './DashboardStack'; // adjust path if needed
+
+
 const Drawer = createDrawerNavigator();
 
 export default function DrawerNavigator({navigation}) {
@@ -58,7 +62,8 @@ export default function DrawerNavigator({navigation}) {
             <Drawer.Screen name="Account" component={AccountScreen} />
             <Drawer.Screen name="Login" component={Login} />
             <Drawer.Screen name="Password" component={Password} />
-            <Drawer.Screen name="Dashboard" component={DashboardScreen} />
+            <Drawer.Screen name="Dashboard" component={DashboardStack} />
+
             <Drawer.Screen name="AccountCommon" component={AccountMenuCommon} />
             <Drawer.Screen name="Product" component={ProductScreen} />
             <Drawer.Screen name="Stores" component={StoresScreen} />
@@ -68,6 +73,7 @@ export default function DrawerNavigator({navigation}) {
 
             <Drawer.Screen name="ServiceComp" component={ServiceCommon} />
             <Drawer.Screen name="Purchase" component={PreparePurchaseScreen} />
+            <Drawer.Screen name="AllProducts" component={AllProducts} />
 
         </Drawer.Navigator>
         </AuthProvider>
