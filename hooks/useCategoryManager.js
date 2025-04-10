@@ -186,8 +186,9 @@ import {
   clearCart,
 
   placeOrder,
-  fetchOrders,
-  fetchOrderItems
+  // fetchOrders,
+  fetchOrderItems,
+  fetchOrdersByUser
 } from "../services/categoryService";
 
 export default function useCategoryManager(navigation, closeDrawer) {
@@ -203,6 +204,7 @@ export default function useCategoryManager(navigation, closeDrawer) {
   const [isBannerLoading, setIsBannerLoading] = useState(false); // Optional: banner-specific loader
   const [cartItems, setCartItems] = useState([]);
   const [isCartLoading, setIsCartLoading] = useState(false);
+  const [cartBadge,setCartBadge] = useState(0);
 
   const [orders, setOrders] = useState([]);
 const [orderItems, setOrderItems] = useState([]);
@@ -348,6 +350,8 @@ const [isOrderLoading, setIsOrderLoading] = useState(false);
       setIsCartLoading(true);
       const data = await fetchCart(userId);
       setCartItems(data);
+      setCartBadge(data.totalItems)
+      console.log("DATA",data)
     } catch (error) {
       console.error("Failed to load cart:", error);
     } finally {
@@ -399,7 +403,7 @@ const [isOrderLoading, setIsOrderLoading] = useState(false);
   const loadOrders = async (userId = 1) => {
     try {
       setIsOrderLoading(true);
-      const data = await fetchOrders(userId);
+      const data = await fetchOrdersByUser(userId);
       setOrders(data);
     } catch (error) {
       console.error("Failed to fetch orders:", error);
@@ -469,6 +473,8 @@ const [isOrderLoading, setIsOrderLoading] = useState(false);
   loadOrders,
   loadOrderItems,
   submitOrder,
+
+  cartBadge
 
   };
 }

@@ -101,7 +101,7 @@ const {setCartUpdated} = useCart();
       <Image source={{uri:product.imageUrl}} style={styles.image} />
       <Text style={styles.name} numberOfLines={2}>{product.productName}</Text>
       <Text style={styles.price}>${product.price.toFixed(2)}</Text>
-      <TouchableOpacity style={styles.button} onPress={() => {alert("Item Added to Cart Successfully");addItemToCart(product);setCartUpdated(true)}}>
+      <TouchableOpacity style={styles.button} onPress={() => {alert("Item Added to Cart Successfully");addItemToCart(product);setCartUpdated((prev)=>!prev)}}>
         <Text style={styles.buttonText}>Add to Cart</Text>
       </TouchableOpacity>
     </TouchableOpacity>

@@ -264,9 +264,8 @@ const ProductPage = ({ navigation, route }) => {
 
       <View style={styles.detailsContainer}>
         <Text style={styles.brand}>{product.brand}</Text>
-        <Text style={styles.productName}>{product.productName}</Text>
-        <Text style={styles.price}>{product.price}€</Text>
-
+          <Text style={styles.name}>{product.productName}</Text>
+          <Text style={styles.price}>{product.price}€</Text>   
         <Text style={styles.label}>Size</Text>
         <View style={styles.selectionBox}>
           <Picker
@@ -354,6 +353,7 @@ const ProductPage = ({ navigation, route }) => {
                   name={expandedSections.details ? "chevron-up" : "chevron-down"}
                   size={24}
                   color="black"
+                  style={{padding:20}}
                 />
           </View>
 
@@ -370,6 +370,7 @@ const ProductPage = ({ navigation, route }) => {
             name={expandedSections.delivery ? "chevron-up" : "chevron-down"}
             size={24}
             color="black"
+            style={{padding:20}}
           />
           </View>
         </TouchableOpacity>
@@ -423,6 +424,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
+
+  sectionTitle:{
+    fontWeight:'bold',
+    fontSize:21,
+    padding:20
+  },
   // Header and general UI styles
   backButtonOverImage: {
     position: "absolute",
@@ -445,9 +452,10 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   brand: {
-    fontSize: 16,
+    fontSize: 12,
     color: "#888",
     textTransform: "uppercase",
+    marginBottom:10
   },
   productName: {
     fontSize: 22,
@@ -457,8 +465,10 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 20,
     fontWeight: "bold",
-    marginVertical: 10,
+    color: "#000",
+    marginBottom:10
   },
+  
   label: {
     fontSize: 16,
     fontWeight: "bold",
@@ -561,25 +571,25 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 8,
   },
+  namePriceContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    marginVertical: 10,
+  },  
   name: {
-    fontSize: 12,
-    color: "#555",
-    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "bold",
+    flex: 1, // allows it to take up available space
+    marginRight: 10, // space between name and price
+    marginBottom:10,
   },
+  
+  
   // Duplicate brand style for related products; you can rename if needed
   // or merge with the above one if they are the same.
-  brand: {
-    fontSize: 12,
-    fontWeight: "bold",
-    marginTop: 5,
-    textAlign: "center",
-  },
-  price: {
-    fontSize: 14,
-    fontWeight: "bold",
-    marginTop: 5,
-    textAlign: "center",
-  },
+ 
+ 
   button: {
     marginTop: 10,
     padding: 10,

@@ -501,6 +501,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: "#555",
         marginTop: 5,
+        paddingBottom:10,
     },
     productCard: {
         width: '48%',
@@ -512,9 +513,10 @@ const styles = StyleSheet.create({
     productImage: {
         width: "100%",
         // marginTop:20,
-        height: 200,
+        height:150,
         // marginLeft:10,
         borderRadius: 10,
+        resizeMode:'cover'
     },
     productBrand: {
         fontSize: 12,

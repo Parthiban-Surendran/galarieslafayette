@@ -191,8 +191,8 @@ export const placeOrder = async (orderData) => {
 // Fetch all orders for a user
 export const fetchOrdersByUser = async (userId) => {
   try {
-    const response = await axios.get(`${BASE_URL}/orders/user/${userId}`);
-    return response.data;
+    const response = await axios.get(`${BASE_URL}/products/orders`);
+    return response.data.orders;
   } catch (error) {
     console.error("Fetch orders error:", error);
     throw new Error("Unable to fetch orders");
@@ -215,8 +215,10 @@ export const fetchOrderById = async (orderId) => {
 // Fetch all order items for a specific order
 export const fetchOrderItems = async (orderId) => {
   try {
-    const response = await axios.get(`${BASE_URL}/order-items/${orderId}`);
-    return response.data;
+    console.log("ID",orderId)
+    const response = await axios.get(`${BASE_URL}/products/order/${orderId}`);
+    console.log(response.data)
+    return response.data.order;
   } catch (error) {
     console.error("Fetch order items error:", error);
     throw new Error("Unable to fetch order items");

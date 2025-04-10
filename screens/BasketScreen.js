@@ -161,12 +161,16 @@ import TopLineText from '../components/TopLineText';
 import Header from '../components/Header';
 import { initPaymentSheet, presentPaymentSheet } from '@stripe/stripe-react-native';
 import { useCart } from '../context/CartContext';
+import PaymentSuccess from '../components/PaymentSuccess'; // update path as needed
+import GaleriesLoader from '../components/GaleriesLoader';
+
 
 const BasketScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [orderData,setOrderData] = useState({})
   const [paymentReady, setPaymentReady] = useState(false);
   const [error, setError] = useState(null);
+  const [paymentEnable,setPaymentEnable] = useState(false);
 
 const {cartUpdated,setCartUpdated} = useCart();
   const {
@@ -181,18 +185,16 @@ const {cartUpdated,setCartUpdated} = useCart();
     setCartUpdated(false);
   }, [cartUpdated]);
 
-  const initializePayment = async (userId) => {
+  const initializePayment = async (userId, totalAmount) => {
     try {
-      console.log("🔄 Initializing payment...");
-
       const response = await axios.post(
         `http://192.168.1.92:3000/products/payment/create-intent`,
-        { totalAmount: orderData.order.totalAmount, currency: 'usd', userId },
+        { totalAmount, currency: 'usd', userId },
         { headers: { 'Content-Type': 'application/json' } }
       );
-
+  
       const { paymentIntent, ephemeralKey, customer, publishableKey } = response.data.data;
-
+  
       const { error } = await initPaymentSheet({
         merchantDisplayName: 'Your Store Name',
         paymentIntentClientSecret: paymentIntent,
@@ -200,59 +202,77 @@ const {cartUpdated,setCartUpdated} = useCart();
         customerEphemeralKeySecret: ephemeralKey,
         allowsDelayedPaymentMethods: true,
       });
-
+  
       if (!error) {
-        console.log("✅ Payment sheet initialized successfully");
         setPaymentReady(true);
+        return true;
       } else {
         console.error("⚠️ Error initializing payment sheet:", error);
         Alert.alert('Error', 'Failed to initialize payment.');
+        return false;
       }
     } catch (err) {
+      console.error("Error in initializePayment:", err);
       Alert.alert('Error', 'Failed to initialize payment.');
+      return false;
     }
   };
-
+  
   const handlePayment = async () => {
-    if (cartItems.length === 0) {
+    if (cartItems.cartItems.length === 0) {
       Alert.alert('Cart Empty', 'Please add items to your basket.');
       return;
     }
-
-    
+  
+    setLoading(true);
+  
     try {
+      // 1. Create the order and get order data
       const orderResponse = await axios.post('http://192.168.1.92:3000/products/order', {
-        items: cartItems,
+        items: cartItems.cartItems,
       });
-
+  
       const order = orderResponse.data;
-      setOrderData(order);
-
-      await initializePayment(order.order.userId);
-
-      const { error } = await presentPaymentSheet();
-
-      if (error) {
-        console.error("⚠️ Payment failed:", error);
-        Alert.alert('Payment Failed', error.message);
-      } else {
-        console.log("✅ Payment successful");
-        await axios.patch(`http://192.168.1.92:3000/products/order/${orderData.order.orderId}/complete`);
-
+      setOrderData(order); // Optional, if you want to store for display/debug later
   
-        console.log('✅ Order status updated to COMPLETED');
+      // 2. Initialize the payment sheet using fresh order data directly
+      const paymentInitResult = await initializePayment(order.order.userId, order.order.totalAmount);
   
-        Alert.alert('Payment Successful', 'Thank you for your purchase!');
+      if (paymentInitResult) {
+        // 3. Present payment sheet
+        const { error } = await presentPaymentSheet();
+  
+        if (error) {
+          await axios.patch(`http://192.168.1.92:3000/products/order/${order.order.orderId}/cancel`);
+
+          Alert.alert('Payment Failed', error.message);
+        } else {
+          console.log("✅ Payment successful");
+  
+          // 4. Mark order as complete
+          await axios.patch(`http://192.168.1.92:3000/products/order/${order.order.orderId}/complete`);
+  
+          console.log('✅ Order status updated to COMPLETED');
+          navigation.navigate('PaymentSuccess', {
+            paymentId: order.order.orderId,
+            totalAmount: order.order.totalAmount,
+            orderDate: order.order.date || new Date().toISOString().slice(0, 10),
+            otherDetails: 'Thank you for your purchase!',
+          });
+        }
       }
+  
     } catch (err) {
       Alert.alert('Payment Error', 'Something went wrong.');
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
-
+  
+  
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+      return <GaleriesLoader/>
   }
 
   if (error) {
@@ -295,7 +315,7 @@ const {cartUpdated,setCartUpdated} = useCart();
             </>
           ) : (
             <>
-              {cartItems.map((item, index) => (
+              {cartItems.cartItems.map((item, index) => (
                 <View key={index} style={styles.cartItem}>
                   <Image source={{ uri: item.product.imageUrl }} style={styles.image} />
                   <View style={{ flex: 1, marginLeft: 10 }}>
@@ -304,20 +324,20 @@ const {cartUpdated,setCartUpdated} = useCart();
 
                     <View style={styles.quantityControls}>
                       <TouchableOpacity
-                        onPress={() => {handleDecrease(item.productId, item.quantity);setCartUpdated(false)}}
+                        onPress={() => {handleDecrease(item.productId, item.quantity);setCartUpdated((prev)=>!prev)}}
                         style={styles.qtyButton}
                       >
                         <Ionicons name="remove" size={20} />
                       </TouchableOpacity>
                       <Text style={styles.qtyText}>{item.quantity}</Text>
                       <TouchableOpacity
-                        onPress={() => {handleIncrease(item.productId, item.quantity);setCartUpdated(false)}}
+                        onPress={() => {handleIncrease(item.productId, item.quantity);setCartUpdated((prev)=>!prev)}}
                         style={styles.qtyButton}
                       >
                         <Ionicons name="add" size={20} />
                       </TouchableOpacity>
                       <TouchableOpacity
-                        onPress={() => {removeItemFromCart(item.productId);setCartUpdated(false)}}
+                        onPress={() => {removeItemFromCart(item.productId);setCartUpdated((prev)=>!prev)}}
                         style={styles.removeBtn}
                       >
                         <Ionicons name="trash" size={20} color="red" />
