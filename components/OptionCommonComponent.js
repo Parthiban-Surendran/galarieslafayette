@@ -269,6 +269,8 @@ export default function OptionCommonComponent({ navigation, title, extra, onBack
         <View style={styles.container}>
            
             <FlatList
+              showsVerticalScrollIndicator={false} // 👈 Hides the scrollbar
+
                 ListHeaderComponent={
                     <>
                             <View style={{ padding: 20, backgroundColor: '#fff' }}>

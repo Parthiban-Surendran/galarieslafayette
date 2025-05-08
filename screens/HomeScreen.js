@@ -487,6 +487,9 @@ const HomeScreen = ({ navigation }) => {
 
     const handleSearch = (text) => {
         setSearchTerm(text);
+        navigation.navigate('Searched',{
+            screen:'Search'
+        })
     };
 
     const filteredProducts = products.filter(product =>
@@ -506,7 +509,9 @@ const HomeScreen = ({ navigation }) => {
       );
       
     const renderCardProduct = ({ item }) => <CardProduct product={item} />;
-
+    const handleSearchClick = () => {
+        navigation.navigate('SearchScreen');
+    };
 
     const renderCategory = ({ item }) => (
         <View style={styles.categoryItem}>
@@ -517,6 +522,12 @@ const HomeScreen = ({ navigation }) => {
             
         </View>
     );
+
+    const handleFocus = () => {
+        navigation.navigate('Searched',{
+            screen:'Search'
+        })
+    }
 
     return (
         <View style={styles.container}>
@@ -529,15 +540,20 @@ const HomeScreen = ({ navigation }) => {
             <View style={{height:800,backgroundColor:'#fff'}}>
            
             <FlatList
-            
+                          showsVerticalScrollIndicator={false} 
+                          
                 ListHeaderComponent={
                     <>
                      
-                        <TopLineText />
-                        <Header />
+                       
                         <View style={{padding:10}}>
-                            <SearchBar onSearch={handleSearch} />
-
+                            {/* <SearchBar onSearch={handleSearch} /> */}
+                            {/* <SearchBar onFocus={() => navigation.navigate('Search')} /> */}
+                            <SearchBar
+                            
+                readOnly={true}
+                onFocus={handleFocus}  // go back to SearchScreen
+            />  
                         </View>
                         <BackgroundBanner
                             videoSource={hero}
@@ -648,7 +664,7 @@ const HomeScreen = ({ navigation }) => {
                                 subheading="Shop the most popular products"
                                 buttonText="View More"
                                 onPress={()=>handlePressBanner44(59)}
-                                />
+                            />
 
                             {/* Repeated Products */}
                             <Text style={styles.sectionTitle}>More Products</Text>

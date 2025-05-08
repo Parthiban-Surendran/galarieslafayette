@@ -365,9 +365,19 @@ export default function DashboardScreen({ navigation, route }) {
     
      
 
-    useEffect(() => {
-        loadFavourites();
-    }, []);
+  useEffect(() => {
+      const fetchAndUpdateFavourites = async () => {
+          try {
+              const data = await fetchFavourites(userId);
+              setFavourites(data);  // Ensure the UI stays in sync with the backend
+          } catch (err) {
+              Alert.alert("Error", "Failed to reload favourites.");
+          }
+      };
+  
+      fetchAndUpdateFavourites();  // Run this when favourites state changes
+  }, [favourites]);
+  
 
     const loadFavourites = async () => {
         try {
@@ -381,9 +391,11 @@ export default function DashboardScreen({ navigation, route }) {
         }
     };
 
+
+
     const isFavourite = (productId) =>
         favourites.some((fav) => fav.productId === productId);
-
+    
     const showSnackbar = (message) => {
         setSnackbarVisible(false); // Hide first
         setSnackbarMessage(message);
@@ -394,26 +406,27 @@ export default function DashboardScreen({ navigation, route }) {
         const productId = item.productId || item.id;
         const isFav = isFavourite(productId);
     
-        // Optimistic update
+        // Optimistic UI update: Immediately update the state
         setFavourites((prev) =>
             isFav
-                ? prev.filter((fav) => fav.productId !== productId)
-                : [...prev, { productId }]
+                ? prev.filter((fav) => fav.productId !== productId) // Remove from favourites
+                : [...prev, { productId, userId }] // Add to favourites
         );
     
         try {
             if (isFav) {
+                // Remove from backend
                 await deleteFavourites(item.productId, userId);
                 showSnackbar('Deleted from favourites');
             } else {
+                // Add to backend
                 await postFavourites(item, userId);
                 showSnackbar('Added to favourites');
             }
         } catch (err) {
             Alert.alert("Error", "Failed to update favourites.");
-            // Rollback to previous state
-            const data = await fetchFavourites(userId);
-            setFavourites(data);
+            // Rollback the optimistic state change if something went wrong
+            loadFavourites();
         }
     };
     
@@ -430,10 +443,8 @@ export default function DashboardScreen({ navigation, route }) {
                 <FlatList
                     ListHeaderComponent={
                         <>
-                            <TopLineText />
-                            <Header />
+                            
                             <View style={{ paddingHorizontal: 10 }}>
-                                <SearchBar />
                                 <Text style={styles.breadcrumbs}>Products</Text>
                                 <Text style={styles.description}>
                                     Explore the latest collections from top brands!
@@ -456,7 +467,7 @@ export default function DashboardScreen({ navigation, route }) {
                         <TouchableOpacity style={styles.productCard} onPress={() => handleProduct(item)}>
                             <Image source={{ uri: item.imageUrl }} style={styles.productImage} />
                             <Text style={styles.productBrand}>{item.brand}</Text>
-                            <Text style={styles.productTitle}>{item.productName}</Text>
+                            <Text style={styles.productTitle} numberOfLines={1} ellipsizeMode="tail">{item.productName}</Text>
                             <Text style={styles.productPrice}>{item.price}€</Text>
                             <TouchableOpacity
                                 style={styles.heartIcon}
@@ -465,7 +476,7 @@ export default function DashboardScreen({ navigation, route }) {
                                 {isFavourite(item.productId || item.id) ? (
                                     <AntDesign name="heart" size={24} color="red" />
                                 ) : (
-                                    <Feather name="heart" size={24} color="black" />
+                                    <Feather name="heart" size={24} color="#FF0000" />
                                 )}
                             </TouchableOpacity>
                         </TouchableOpacity>
@@ -516,10 +527,11 @@ const styles = StyleSheet.create({
         height:150,
         // marginLeft:10,
         borderRadius: 10,
-        resizeMode:'cover'
+        resizeMode:'cover',
+        backgroundColor: 'rgba(7, 7, 7, 0.3)'
     },
     productBrand: {
-        fontSize: 12,
+        fontSize: 16,
         paddingHorizontal:10,
         fontWeight: "bold",
         marginTop: 5,
@@ -527,7 +539,6 @@ const styles = StyleSheet.create({
     productTitle: {
         fontSize: 14,
         paddingHorizontal:10,
-
         color: "#333",
         marginTop: 2,
     },
@@ -539,7 +550,7 @@ const styles = StyleSheet.create({
     },
     heartIcon: {
         position: "absolute",
-        top: 5,
+        top: 10,
         right: 10,
     },
 });

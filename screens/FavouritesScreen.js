@@ -37,29 +37,50 @@ import TopLineText from '../components/TopLineText';
 import Header from '../components/Header';
 import useCategoryManager from '../hooks/useCategoryManager';
 import { Snackbar } from 'react-native-paper';
+import GaleriesLoader from '../components/GaleriesLoader';
+import { Ionicons } from '@expo/vector-icons';
+
 const FavouritesScreen = ({ navigation }) => {
-  const { favourites, removeFavourite,removeAllFavourite,loadFavourites } = useCategoryManager(1);
+  const { favourites,setFavourites, removeFavourite,removeAllFavourite ,loadFavourites} = useCategoryManager(1);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const showSnackbar = (message) => {
     setSnackbarMessage(message);
     setSnackbarVisible(true);
   };
 
+useEffect(() => {
+  const unsubscribe = navigation.addListener('focus', async () => {
+    setLoading(true);
+    try {
+      await loadFavourites(1);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  });
 
+  return unsubscribe;
+}, [navigation]);
+
+  
  
 
-  return (
-    <>
-      <TopLineText />
-      <Header />
+return (
+  <>
+    {loading ? (
+      <GaleriesLoader/>
+    ) : (
       <OptionCommonComponent
         navigation={navigation}
         title="Favourites"
-        extra={favourites.length === 0 ? 'You might like' : 'Suggested Products'}
+        extra={Array.isArray(favourites) && favourites.length === 0 ? 'You might like' : 'Suggested Products'}
         onBackPress={() => navigation.goBack()}
         customContent={
-          favourites.length === 0 ? (
+          Array.isArray(favourites) && favourites.length === 0 ? (
             <>
               <Text style={styles.emptyText}>You have no favourite items.</Text>
               <TouchableOpacity
@@ -75,8 +96,8 @@ const FavouritesScreen = ({ navigation }) => {
                 <View key={index} style={styles.favItem}>
                   <Image source={{ uri: item.product.imageUrl }} style={styles.image} />
                   <View style={{ flex: 1, marginLeft: 10 }}>
-                    <Text style={styles.name}>{item.product.productName}</Text>
-                    <Text style={styles.price}>${item.product.price.toFixed(2)}</Text>
+                    <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">{item.product.productName}</Text>
+                    <Text style={styles.price}>{item.product.price.toFixed(2)}€</Text>
                   </View>
                   <TouchableOpacity
                     style={styles.removeButton}
@@ -85,41 +106,40 @@ const FavouritesScreen = ({ navigation }) => {
                       showSnackbar(`${item.product.productName} removed from favourites`);
                     }}
                   >
-                    <Text style={styles.removeButtonText}>Remove</Text>
-                  </TouchableOpacity>
+                      <Ionicons name="trash" size={20} color="red" />
+                      </TouchableOpacity>
                 </View>
               ))}
 
               <TouchableOpacity
                 style={styles.clearButton}
                 onPress={async () => {
-                  // Loop through all and remove
-                  
-                    await removeAllFavourite();
-                  
+                  await removeAllFavourite();
                   showSnackbar('All favourites cleared');
                 }}
               >
-                <Text style={styles.clearButtonText}>Clear Favourites</Text>
+                <Text style={styles.clearButtonText}>Clear All Favourites</Text>
               </TouchableOpacity>
             </>
           )
         }
       />
+    )}
 
-      <Snackbar
-        visible={snackbarVisible}
-        onDismiss={() => setSnackbarVisible(false)}
-        duration={3000}
-        action={{
-          label: 'OK',
-          onPress: () => setSnackbarVisible(false),
-        }}
-      >
-        {snackbarMessage}
-      </Snackbar>
-    </>
-  );
+    <Snackbar
+      visible={snackbarVisible}
+      onDismiss={() => setSnackbarVisible(false)}
+      duration={3000}
+      action={{
+        label: 'OK',
+        onPress: () => setSnackbarVisible(false),
+      }}
+    >
+      {snackbarMessage}
+    </Snackbar>
+  </>
+);
+
 };
 
 const styles = StyleSheet.create({
@@ -159,9 +179,13 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 16,
+    fontWeight:700,
+    marginBottom:5
   },
   price: {
-    color: 'gray',
+    fontSize:14,
+    color: 'black',
+    fontWeight:500
   },
   clearButton: {
     backgroundColor: '#000',

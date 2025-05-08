@@ -290,7 +290,6 @@ const [isOrderLoading, setIsOrderLoading] = useState(false);
     fetchCategories(prev);
   };
 
-  // 🔥 FAVOURITES FUNCTIONS 🔥
 
   const loadFavourites = async (userId) => {
     try {
@@ -315,7 +314,7 @@ const [isOrderLoading, setIsOrderLoading] = useState(false);
     try {
       console.log(productId)
       const result = await deleteFavourites(productId,1);
-      await loadFavourites(1); // Replace with dynamic userId if needed
+      await loadFavourites(1); 
       return result;
     } catch (error) {
       console.error("Failed to delete favourite:", error);

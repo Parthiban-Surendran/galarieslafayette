@@ -171,32 +171,127 @@
 // export default CategoryComponent;
 
 
+// import React from 'react';
+// import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
+// import { useNavigation } from '@react-navigation/native';
+// import useCategoryManager from '../hooks/useCategoryManager';
+
+// const CategoryComponent = ({ onCategoryPress, showLoader,closeLoader }) => {
+//     const navigation = useNavigation();
+//     const {
+//         categories,
+//         fetchParentCategoryProducts
+//     } = useCategoryManager();
+
+//     const LOCAL_IP = "192.168.1.92"; // Replace with your local IP
+
+//     const replaceLocalhost = (url) => {
+//         return url.includes("localhost") ? url.replace("localhost", LOCAL_IP) : url;
+//     };
+
+//     const handleCategoryPress = async (categoryId) => {
+//         try {
+//             showLoader(); 
+//             const products = await fetchParentCategoryProducts(categoryId);
+
+//             navigation.navigate('Dashboard', {
+//                 screen: 'DashboardMain',
+//                 params: { products }    
+//             });
+//             closeLoader();
+//         } catch (error) {
+//             console.error("Error navigating to Dashboard:", error);
+//         }
+//     };
+
+//     const renderCategory = ({ item }) => (
+//         <View style={styles.categoryItem}>
+//             <TouchableOpacity onPress={() => handleCategoryPress(item.categoryId)}>
+//                 <Image source={{ uri: replaceLocalhost(item.imageUrl) }} style={styles.categoryImage} />
+//                 <Text style={styles.categoryText}>{item.categoryName}</Text>
+//             </TouchableOpacity>
+//         </View>
+//     );
+
+//     return (
+//         <View style={styles.categoriesContainer}>
+//             <Text style={styles.sectionTitle}>Categories</Text>
+//             <FlatList
+//                 data={categories}
+//                 renderItem={renderCategory}
+//                 keyExtractor={(item) => item.id}
+//                 numColumns={3}
+//                 contentContainerStyle={styles.categoriesList}
+//                 scrollEnabled={false}
+//             />
+//         </View>
+//     );
+// };
+
+// const styles = StyleSheet.create({
+//     categoriesContainer: {
+//         paddingHorizontal: 10,
+//     },
+//     categoriesList: {
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//     },
+//     sectionTitle: {
+//         marginTop: 10,
+//         fontSize: 21,
+//         fontWeight: "bold",
+//         fontFamily: 'GLBader',
+//         marginBottom: 10,
+//         paddingHorizontal: 10,
+//     },
+//     categoryItem: {
+//         margin: 10,
+//         alignItems: 'center',
+//     },
+//     categoryImage: {
+//         width: 80,
+//         height: 80,
+//         borderRadius: 40,
+//     },
+//     categoryText: {
+//         marginTop: 5,
+//         fontSize: 16,
+//         fontWeight: 'bold',
+//         marginLeft: 20,
+//     },
+// });
+
+// export default CategoryComponent;
+
+
+
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import useCategoryManager from '../hooks/useCategoryManager';
-
-const CategoryComponent = ({ onCategoryPress, showLoader,closeLoader }) => {
+import network from '../utils/network';
+const CategoryComponent = ({ onCategoryPress, showLoader, closeLoader }) => {
     const navigation = useNavigation();
-    const {
-        categories,
-        fetchParentCategoryProducts
-    } = useCategoryManager();
+    const { categories, fetchParentCategoryProducts } = useCategoryManager();
 
-    const LOCAL_IP = "192.168.251.94"; // Replace with your local IP
+
 
     const replaceLocalhost = (url) => {
-        return url.includes("localhost") ? url.replace("localhost", LOCAL_IP) : url;
+      // If your original image URLs are like "http://localhost:3000/..."
+      if (url.startsWith("http://localhost:3000")) {
+        return url.replace("http://localhost:3000", network.BASE_URL);
+      }
+      return url;
     };
+    
 
     const handleCategoryPress = async (categoryId) => {
         try {
-            showLoader(); 
+            showLoader();
             const products = await fetchParentCategoryProducts(categoryId);
-
             navigation.navigate('Dashboard', {
                 screen: 'DashboardMain',
-                params: { products }
+                params: { products },
             });
             closeLoader();
         } catch (error) {
@@ -205,12 +300,16 @@ const CategoryComponent = ({ onCategoryPress, showLoader,closeLoader }) => {
     };
 
     const renderCategory = ({ item }) => (
-        <View style={styles.categoryItem}>
-            <TouchableOpacity onPress={() => handleCategoryPress(item.categoryId)}>
-                <Image source={{ uri: replaceLocalhost(item.imageUrl) }} style={styles.categoryImage} />
-                <Text style={styles.categoryText}>{item.categoryName}</Text>
-            </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+            onPress={() => handleCategoryPress(item.categoryId)}
+            style={styles.card}
+        >
+            <Image
+                source={{ uri: replaceLocalhost(item.imageUrl) }}
+                style={styles.categoryImage}
+            />
+            <Text style={styles.categoryText}>{item.categoryName}</Text>
+        </TouchableOpacity>
     );
 
     return (
@@ -222,6 +321,7 @@ const CategoryComponent = ({ onCategoryPress, showLoader,closeLoader }) => {
                 keyExtractor={(item) => item.id}
                 numColumns={3}
                 contentContainerStyle={styles.categoriesList}
+                columnWrapperStyle={styles.columnWrapper} // ADD THIS
                 scrollEnabled={false}
             />
         </View>
@@ -230,35 +330,56 @@ const CategoryComponent = ({ onCategoryPress, showLoader,closeLoader }) => {
 
 const styles = StyleSheet.create({
     categoriesContainer: {
-        paddingHorizontal: 10,
+      paddingHorizontal: 12,
+      backgroundColor: '#F9F9F9', // soft background
     },
     categoriesList: {
-        justifyContent: 'center',
-        alignItems: 'center',
+      paddingBottom: 20,
+    },
+    columnWrapper: {
+      justifyContent: 'space-between',
+      paddingHorizontal: 8,
+      justifyContent: 'space-evenly', 
     },
     sectionTitle: {
-        marginTop: 10,
-        fontSize: 21,
-        fontWeight: "bold",
-        fontFamily: 'GLBader',
-        marginBottom: 10,
-        paddingHorizontal: 10,
+      marginTop: 10,
+      fontSize: 21,
+      fontWeight: 'bold',
+      fontFamily: 'GLBader',
+      marginBottom: 10,
+      paddingHorizontal: 10,
+      color: '#222', // dark but not pitch black
     },
-    categoryItem: {
-        margin: 10,
-        alignItems: 'center',
+    card: {
+      flex: 1,
+      alignItems: 'center',
+      backgroundColor: '#f0f0f0',
+      marginVertical: 10,
+      marginHorizontal: 6,
+      paddingVertical: 15,
+      borderRadius: 12,
+      elevation: 3,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 4,
+      maxWidth: 110,
     },
+          
     categoryImage: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
+      width: 60,
+      height: 60,
+      borderRadius: 30,
+      resizeMode: 'contain',
+      backgroundColor: '#FAFAFA', // subtle bg for non-square images
     },
     categoryText: {
-        marginTop: 5,
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginLeft: 20,
+      marginTop: 8,
+      fontSize: 14,
+      fontWeight: '600',
+      color: '#444',
+      textAlign: 'center',
     },
-});
-
+  });
+  
 export default CategoryComponent;

@@ -28,8 +28,7 @@ const Stores = () => {
 
   return (
     <View style={styles.container}>
-      <TopLineText/>
-      <Header/>
+     
       <View style={{ padding: 20 }}>
         <View style={styles.searchContainer}>
           <Text style={styles.title}>Find a store</Text>

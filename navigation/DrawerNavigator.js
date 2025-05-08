@@ -49,18 +49,35 @@ import OrderScreen from "../screens/OrderScreen";
 import PaymentSuccess from '../components/PaymentSuccess'
 import OrderDetailScreen from "../screens/OrderDetailScreen";
 import OrderStackNavigator from './OrderStackNavigator'
+import Header from "../components/Header";
+import TopLineText from "../components/TopLineText";
+import AddressScreen from "../screens/AddressScreen";
+import SearchScreen from "../screens/SearchScreen";
+import SearchResultsScreen from '../screens/SearchResultsScreen';
+import SearchStack from "./SearchStack";
+
+// Add to your stack or tab navigator
 
 const Drawer = createDrawerNavigator();
 
 export default function DrawerNavigator({navigation}) {
     return (
         <AuthProvider>
-        <Drawer.Navigator
-            drawerContent={(props) => <ReusableDrawer {...props}/>}
-            screenOptions={{ headerShown: false }} 
-        >
+       <Drawer.Navigator
+  drawerContent={(props) => <ReusableDrawer {...props} />}
+  screenOptions={{
+    header: () => (
+      <>
+        <TopLineText />
+        <Header />
+      </>
+    ),
+  }}
+  
+>
+
             <Drawer.Screen name="Home" component={HomeScreen} />
-            <Drawer.Screen name="Favourites" component={Favourites} />
+
             <Drawer.Screen name="Basket" component={Basket} />
             <Drawer.Screen name="Account" component={AccountScreen} />
             <Drawer.Screen name="Login" component={Login} />
@@ -79,12 +96,19 @@ export default function DrawerNavigator({navigation}) {
             <Drawer.Screen name="AllProducts" component={AllProducts} />
             {/* <Drawer.Screen name="OrdersScreen" component={OrderScreen} /> */}
             <Drawer.Screen name="PaymentSuccess" component={PaymentSuccess} />
+            <Drawer.Screen name="AddressScreen" component={AddressScreen} />
+
             {/* <Drawer.Screen name="OrderDetail" component={OrderDetailScreen} /> */}
 
             <Drawer.Screen
   name="Orders"
   component={OrderStackNavigator}
 />
+
+
+<Drawer.Screen name="SearchResults" component={SearchResultsScreen} />
+<Drawer.Screen name="Searched" component={SearchStack} />
+
 
 
         </Drawer.Navigator>

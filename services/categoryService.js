@@ -1,7 +1,8 @@
 // services/categoryService.js
 import axios from "axios";
+import network from "../utils/network";
 
-const BASE_URL = "http://192.168.1.92:3000";
+const BASE_URL = `${network.BASE_URL}`;
 
 export const fetchParentCategories = async () => {
   const response = await axios.get(`${BASE_URL}/categories?isParent=true`);
@@ -218,7 +219,7 @@ export const fetchOrderItems = async (orderId) => {
     console.log("ID",orderId)
     const response = await axios.get(`${BASE_URL}/products/order/${orderId}`);
     console.log(response.data)
-    return response.data.order;
+    return response.data;
   } catch (error) {
     console.error("Fetch order items error:", error);
     throw new Error("Unable to fetch order items");

@@ -206,6 +206,7 @@ import useCategoryManager from "../hooks/useCategoryManager";
 const ProductPage = ({ navigation, route }) => {
   const { product } = route.params;
   const { addItemToCart,fetchBannerProducts } = useCategoryManager();
+  const {setCartUpdated} = useCart();
 
   const handlePressBanner44 = async (categoryId) => {
     setLoading(true); // Show loader
@@ -224,13 +225,24 @@ const ProductPage = ({ navigation, route }) => {
 
   
 
-  const { addToCart } = useCart();
   const [selectedSize, setSelectedSize] = useState("One Size");
   const [selectedQuantity, setSelectedQuantity] = useState("1");
   const [expandedSections, setExpandedSections] = useState({
     details: false,
     delivery: false,
   });
+
+  const deliveryDate = new Date();
+deliveryDate.setDate(deliveryDate.getDate() + 3); // Add 3 days
+
+const formattedDate = deliveryDate.toLocaleDateString('en-GB', {
+  weekday: 'long',
+  day: 'numeric',
+  month: 'long',
+});
+
+
+
   const [loading, setLoading] = useState(false);
 
   const toggleSection = (section) => {
@@ -247,8 +259,7 @@ const ProductPage = ({ navigation, route }) => {
   // Header Component for FlatList: all static content on top
   const ListHeader = () => (
     <>
-      <TopLineText />
-      <Header />
+    
       <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={styles.backButtonOverImage}
@@ -266,7 +277,10 @@ const ProductPage = ({ navigation, route }) => {
         <Text style={styles.brand}>{product.brand}</Text>
           <Text style={styles.name}>{product.productName}</Text>
           <Text style={styles.price}>{product.price}€</Text>   
-        <Text style={styles.label}>Size</Text>
+          <Text style={styles.deliveryText}>FREE Delivery.</Text>
+          <Text style={styles.deliveryText}>Delivered by {formattedDate}</Text>
+
+        {/* <Text style={styles.label}>Size</Text>
         <View style={styles.selectionBox}>
           <Picker
             selectedValue={selectedSize}
@@ -274,17 +288,11 @@ const ProductPage = ({ navigation, route }) => {
           >
             <Picker.Item label="One Size" value="One Size" />
           </Picker>
-        </View>
+        </View> */}
 
-        <TouchableOpacity
-          style={styles.addToCartButton}
-          onPress={() => {
-            alert("Added to Cart Successfully");
-            addItemToCart(product);
-          }}
-        >
-          <Text style={styles.addToCartText}>ADD TO CART</Text>
-        </TouchableOpacity>
+         <TouchableOpacity style={styles.addToCartButton} onPress={() => {alert("Item Added to Cart Successfully");setCartUpdated((prev)=>!prev);addItemToCart(product)}}>
+                <Text style={styles.buttonText}>Add to Cart</Text>
+              </TouchableOpacity>
 
         <View style={styles.deliveryContainer}>
           <Text style={styles.deliveryTitle}>
@@ -433,8 +441,8 @@ const styles = StyleSheet.create({
   // Header and general UI styles
   backButtonOverImage: {
     position: "absolute",
-    top: 105,
-    left: 10,
+    top:10,
+    left: 5,
     zIndex: 999,
     backgroundColor: "#ffffffaa",
     padding: 8,
@@ -452,25 +460,25 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   brand: {
-    fontSize: 12,
+    fontSize: 14,
     color: "#888",
     textTransform: "uppercase",
     marginBottom:10
   },
   productName: {
-    fontSize: 22,
+    fontSize: 23,
     fontWeight: "bold",
     marginVertical: 4,
   },
   price: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
     color: "#000",
     marginBottom:10
   },
   
   label: {
-    fontSize: 16,
+    fontSize: 21,
     fontWeight: "bold",
     marginTop: 10,
   },
@@ -485,7 +493,7 @@ const styles = StyleSheet.create({
     padding: 15,
     alignItems: "center",
     borderRadius: 5,
-    marginTop: 20,
+    marginTop: 10,
   },
   addToCartText: {
     color: "white",
@@ -604,6 +612,13 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
   },
+  deliveryText: {
+    marginTop: 5,
+    fontSize: 14,
+    color: '#2e7d32',
+    fontWeight: '500',
+  }
+  
 });
 
 export default ProductPage;

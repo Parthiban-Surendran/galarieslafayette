@@ -19,9 +19,9 @@ const OrderItemCard = ({ item }) => {
         <Text style={styles.name}>{item.product.productName}</Text>
         <View style={{ marginTop: 10 }}>
   <Text style={{ lineHeight: 18 }}>Quantity: {item.quantity}</Text>
-  <Text style={{ lineHeight: 18 }}>Price: ₹{item.price}</Text>
+  <Text style={{ lineHeight: 18 }}>Price: ₹{item.product.price}</Text>
   <Text style={{ fontWeight: 'bold', lineHeight: 18 }}>
-    Total Price: ₹{item.price * item.quantity}
+    Total Price: ₹{item.product.price * item.quantity}
   </Text>
 </View>
 

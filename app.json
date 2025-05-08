@@ -17,8 +17,9 @@
       "bundleIdentifier": "com.parthiban123.galarieslafayette"
     },
     "android": {
+      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/galerieslafayette_logo.png",
+        "foregroundImage": "./assets/playstore.png",
         "backgroundColor": "#ffffff"
       },
       "intentFilters": [

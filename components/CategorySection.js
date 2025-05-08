@@ -78,6 +78,7 @@ import { View, Text, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator, 
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import network from "../utils/network";
 
 const CategorySection = ({ categoryId }) => {
     const navigation = useNavigation();
@@ -91,7 +92,8 @@ const CategorySection = ({ categoryId }) => {
     const fetchProducts = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(`http://192.168.1.92:3000/products?categoryId=${categoryId}`);
+            const response = await axios.get(`${network.BASE_URL}/products?categoryId=${categoryId}`);
+            console.log(`${network.BASE_URL}/products?categoryId=${categoryId}`)
             setProducts(response.data);
         } catch (error) {
             console.error("Error fetching products:", error);

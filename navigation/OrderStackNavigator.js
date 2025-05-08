@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import OrderScreen from '../screens/OrderScreen';
 import OrderDetailScreen from '../screens/OrderDetailScreen';
 import ProductScreen from '../screens/ProductScreen'; // adjust path as needed
+import BasketScreen from '../screens/BasketScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,6 +13,8 @@ const OrderStackNavigator = () => (
     <Stack.Screen name="OrderScreen" component={OrderScreen} />
     <Stack.Screen name="OrderDetailScreen" component={OrderDetailScreen} />
     <Stack.Screen name="Product" component={ProductScreen} />
+    <Stack.Screen name="Basket" component={BasketScreen} />
+
 
   </Stack.Navigator>
 );

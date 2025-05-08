@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import network from '../utils/network';
 
 const CartContext = createContext();
 
@@ -8,11 +9,15 @@ export const useCart = () => useContext(CartContext);
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [cartUpdated, setCartUpdated] = useState(false);
-
+  const [itemLoaders, setItemLoaders] = useState(false);
+  const toggleItemLoader = () => {
+    setItemLoaders(prev => !prev);
+  };
+  
 
   const loadCart = async () => {
     try {
-      const res = await axios.get('http://192.168.1.92:3000/products/cart');
+      const res = await axios.get(`${network.BASE_URL}/products/cart`);
       setCartItems(res.data);
     } catch (err) {
     }
@@ -24,18 +29,18 @@ export const CartProvider = ({ children }) => {
 
   const addItemToCart = async (productId, quantity = 1) => {
     try {
-      await axios.post('http://192.168.1.92:3000/products/cart/add', {
+      await axios.post(`${network.BASE_URL}/products/cart/add`, {
         productId,
         quantity,
       });
-      await loadCart(); // 🟢 refresh cart after adding
+      await loadCart(); 
     } catch (err) {
     }
   };
 
   const removeItemFromCart = async (productId) => {
     try {
-      await axios.delete(`http://192.168.1.92:3000/products/cart/remove/${productId}`);
+      await axios.delete(`${network.BASE_URL}/products/cart/remove/${productId}`);
       await loadCart();
     } catch (err) {
     }
@@ -43,7 +48,7 @@ export const CartProvider = ({ children }) => {
 
   const updateItemQuantity = async (productId, quantity) => {
     try {
-      await axios.patch(`http://192.168.1.92:3000/products/cart/update`, {
+      await axios.patch(`${network.BASE_URL}/products/cart/update`, {
         productId,
         quantity
       });
@@ -54,7 +59,7 @@ export const CartProvider = ({ children }) => {
 
   const clearUserCart = async () => {
     try {
-      await axios.delete('http://192.168.1.92:3000/products/cart/clear');
+      await axios.delete(`${network.BASE_URL}/products/cart/clear`);
       await loadCart();
     } catch (err) {
     }
@@ -70,7 +75,9 @@ export const CartProvider = ({ children }) => {
         clearUserCart,
         loadCart,
         cartUpdated,
-        setCartUpdated
+        setCartUpdated,
+        itemLoaders,
+        toggleItemLoader
       }}
     >
       {children}
