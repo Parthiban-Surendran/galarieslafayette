@@ -346,6 +346,7 @@ import LuxuryCard from "../components/LuxuryCard";
 import BottomComp from "../components/BottomComp";
 import GaleriesLoader from "../components/GaleriesLoader";
 import { Snackbar } from 'react-native-paper';
+import { FontAwesome } from '@expo/vector-icons';
 
 
 import {
@@ -377,7 +378,7 @@ export default function DashboardScreen({ navigation, route }) {
   
       fetchAndUpdateFavourites();  // Run this when favourites state changes
   }, [favourites]);
-  
+  console.log(products[0])
 
     const loadFavourites = async () => {
         try {
@@ -435,12 +436,50 @@ export default function DashboardScreen({ navigation, route }) {
         navigation.navigate("Product", { product: item });
     };
 
+
+    const renderStars = (rating) => {
+        const stars = [];
+        const fullStars = Math.floor(rating);
+        const halfStar = rating % 1 >= 0.5;
+        const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+      
+        // Full stars
+        for (let i = 0; i < fullStars; i++) {
+            stars.push(<FontAwesome key={`full-${i}`} name="star" size={16} color="#1d7532" />);
+        }
+      
+        // Half star (if applicable)
+        if (halfStar) {
+            stars.push(<FontAwesome key="half" name="star-half" size={16} color="#1d7532" />);
+        }
+      
+        // Empty stars
+        for (let i = 0; i < emptyStars; i++) {
+            stars.push(<FontAwesome key={`empty-${i}`} name="star-o" size={16} color="#1d7532" />);
+        }
+      
+        return stars;
+    };
+
+    const deliveryDate = new Date();
+    deliveryDate.setDate(deliveryDate.getDate() + 3); // Add 3 days
+    
+    const formattedDate = deliveryDate.toLocaleDateString('en-GB', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+    });
+    
+   
+    
+  
     return (
         <View style={styles.container}>
             {loading ? (
                 <GaleriesLoader />
             ) : (
                 <FlatList
+                showsVerticalScrollIndicator={false}
                     ListHeaderComponent={
                         <>
                             
@@ -455,7 +494,7 @@ export default function DashboardScreen({ navigation, route }) {
                     data={products}
                    
                     numColumns={2}
-                    columnWrapperStyle={{ justifyContent: 'space-between', paddingHorizontal: 10 }} // ✅ only affects rows of product cards
+                    columnWrapperStyle={{ justifyContent: 'center' }} // ✅ only affects rows of product cards
 
                     ListFooterComponent={
                         <>
@@ -463,24 +502,95 @@ export default function DashboardScreen({ navigation, route }) {
                         </>
                     }
                     keyExtractor={(item, index) => (item.productId || item.id || index).toString()}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity style={styles.productCard} onPress={() => handleProduct(item)}>
-                            <Image source={{ uri: item.imageUrl }} style={styles.productImage} />
-                            <Text style={styles.productBrand}>{item.brand}</Text>
-                            <Text style={styles.productTitle} numberOfLines={1} ellipsizeMode="tail">{item.productName}</Text>
-                            <Text style={styles.productPrice}>{item.price}€</Text>
-                            <TouchableOpacity
-                                style={styles.heartIcon}
-                                onPress={() => toggleFavourite(item)}
-                            >
-                                {isFavourite(item.productId || item.id) ? (
-                                    <AntDesign name="heart" size={24} color="red" />
-                                ) : (
-                                    <Feather name="heart" size={24} color="#FF0000" />
-                                )}
-                            </TouchableOpacity>
-                        </TouchableOpacity>
-                    )}
+                    renderItem={({ item, index }) => {
+                        const isLeftItem = index % 2 === 0;
+                        const nextItem = products[index + 1];
+                    
+                        if (isLeftItem) {
+                            return (
+                                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+ <TouchableOpacity style={styles.productCard} onPress={() => handleProduct(item)}>
+  <Image source={{ uri: item.imageUrl }} style={styles.productImage} />
+  <Text style={styles.productBrand}>{item.productName}</Text>
+  <Text style={styles.productTitle} numberOfLines={1} ellipsizeMode="tail">{item.brand}</Text>
+
+  {item.rating !== undefined && (
+    <View style={styles.ratingContainer}>
+      {renderStars(item.rating)}
+      <Text style={styles.productRating}>({item.rating.toFixed(1)})</Text>
+    </View>
+  )}
+
+  <View style={styles.priceRow}>
+    <Text style={styles.discountText}>↓ {item.discountPercent}%</Text>
+    <Text style={styles.originalPrice}>₹{item.originalPrice}</Text>
+    <Text style={styles.discountedPrice}>₹{item.discountedPrice}</Text>
+  </View>
+
+  <Text style={styles.hotDeal}>Hot Deal</Text>
+  <Text style={styles.deliveryDate}>Free delivery by <Text style={{ fontWeight: 'bold' }}>{formattedDate}</Text></Text>
+
+  <TouchableOpacity
+    style={styles.heartIcon}
+    onPress={() => toggleFavourite(item)}
+  >
+    {isFavourite(item.productId || item.id) ? (
+      <AntDesign name="heart" size={24} color="red" />
+    ) : (
+      <Feather name="heart" size={24} color="#FF0000" />
+    )}
+  </TouchableOpacity>
+</TouchableOpacity>
+
+    
+
+                                    {/* Divider and second item */}
+                                    {nextItem && (
+                                        <>
+                                            <View style={styles.verticalDivider} />
+                                            <TouchableOpacity style={styles.productCard} onPress={() => handleProduct(nextItem)}>
+  <Image source={{ uri: nextItem.imageUrl }} style={styles.productImage} />
+  <Text style={styles.productBrand}>{nextItem.productName}</Text>
+  <Text style={styles.productTitle} numberOfLines={1} ellipsizeMode="tail">{nextItem.brand}</Text>
+
+  {item.rating !== undefined && (
+    <View style={styles.ratingContainer}>
+      {renderStars(nextItem.rating)}
+      <Text style={styles.productRating}>({nextItem.rating.toFixed(1)})</Text>
+    </View>
+  )}
+
+  <View style={styles.priceRow}>
+    <Text style={styles.discountText}>↓ {nextItem.discountPercent}%</Text>
+    <Text style={styles.originalPrice}>₹{nextItem.originalPrice}</Text>
+    <Text style={styles.discountedPrice}>₹{nextItem.discountedPrice}</Text>
+  </View>
+
+  <Text style={styles.hotDeal}>Hot Deal</Text>
+  <Text style={styles.deliveryDate}>Free delivery by <Text style={{ fontWeight: 'bold' }}>{formattedDate}</Text></Text>
+
+  <TouchableOpacity
+    style={styles.heartIcon}
+    onPress={() => toggleFavourite(nextItem)}
+  >
+    {isFavourite(nextItem.productId || nextItem.id) ? (
+      <AntDesign name="heart" size={24} color="red" />
+    ) : (
+      <Feather name="heart" size={24} color="#FF0000" />
+    )}
+  </TouchableOpacity>
+</TouchableOpacity>
+
+                                        </>
+                                    )}
+                                </View>
+                            );
+                        }
+                    
+                        // Skip rendering for right items — handled above
+                        return null;
+                    }}
+                    
                 />
             )}
             <Snackbar
@@ -517,8 +627,11 @@ const styles = StyleSheet.create({
     productCard: {
         width: '48%',
         backgroundColor: '#f9f9f9',
-        borderRadius: 10,
-        marginBottom: 10,
+        marginBottom:15,
+        paddingBottom:10,
+        // borderBottomWidth:0.5,
+        
+        // borderColor:'#ccc'
         // no marginHorizontal here because we’re using justifyContent: 'space-between'
     },
     productImage: {
@@ -526,7 +639,6 @@ const styles = StyleSheet.create({
         // marginTop:20,
         height:150,
         // marginLeft:10,
-        borderRadius: 10,
         resizeMode:'cover',
         backgroundColor: 'rgba(7, 7, 7, 0.3)'
     },
@@ -553,4 +665,65 @@ const styles = StyleSheet.create({
         top: 10,
         right: 10,
     },
+    verticalDivider: {
+        width: 1,
+        backgroundColor: "#ccc",
+        marginHorizontal: 5,
+    },
+     // Your existing styles
+     ratingContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 5,
+        marginLeft:5
+    },
+    productRating: {
+        fontSize: 14,
+        color: '#1d7532',
+        marginLeft: 5,
+    },
+    discountText: {
+        color: 'green',
+        fontWeight: 'bold',
+        marginRight: 5,
+      },
+      
+      originalPrice: {
+        textDecorationLine: 'line-through',
+        color: 'grey',
+        marginRight: 5,
+      },
+      
+      discountedPrice: {
+        color: 'black',
+        fontWeight: 'bold',
+      },
+      
+      priceRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 4,
+        marginLeft:5
+      },
+      
+      hotDeal: {
+        backgroundColor: '#d4f8d4',
+        color: 'green',
+        fontWeight: 'bold',
+        alignSelf: 'flex-start',
+        paddingHorizontal: 6,
+        paddingVertical: 2,
+        borderRadius: 4,
+        marginTop: 6,
+        marginLeft:5
+      },
+      
+      deliveryDate: {
+        fontSize: 12,
+        color: '#444',
+        marginTop: 4,
+        marginLeft:5
+
+      },
+      
 });

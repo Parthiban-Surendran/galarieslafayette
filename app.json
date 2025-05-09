@@ -17,7 +17,10 @@
       "bundleIdentifier": "com.parthiban123.galarieslafayette"
     },
     "android": {
-      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"],
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/playstore.png",
         "backgroundColor": "#ffffff"
@@ -32,10 +35,13 @@
             {
               "scheme": "https",
               "host": "parthiban-surendran.github.io",
-              "pathPrefix":"/galarieslafayette"
+              "pathPrefix": "/galarieslafayette"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ],
       "package": "com.parthiban123.galarieslafayette"
@@ -43,16 +49,15 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-
     "plugins": [
       "expo-font"
     ],
-    "scheme":"myapp",
+    "scheme": "myapp",
     "extra": {
       "eas": {
-        "projectId": "000c5d1e-f524-432e-8de3-61e08373e940"
+        "projectId": "bc033368-ee7d-41b9-90df-7a56380d3eb5"
       }
     },
-    "owner": "parthiban123"
+    "owner": "parthiban982003"
   }
 }

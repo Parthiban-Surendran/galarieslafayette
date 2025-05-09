@@ -256,6 +256,32 @@ const formattedDate = deliveryDate.toLocaleDateString('en-GB', {
     navigation.navigate("Stores");
   };
 
+  const renderStars = (rating) => {
+          const stars = [];
+          const fullStars = Math.floor(rating);
+          const halfStar = rating % 1 >= 0.5;
+          const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+        
+          // Full stars
+          for (let i = 0; i < fullStars; i++) {
+              stars.push(<FontAwesome key={`full-${i}`} name="star" size={16} color="#1d7532" />);
+          }
+        
+          // Half star (if applicable)
+          if (halfStar) {
+              stars.push(<FontAwesome key="half" name="star-half" size={16} color="#1d7532" />);
+          }
+        
+          // Empty stars
+          for (let i = 0; i < emptyStars; i++) {
+              stars.push(<FontAwesome key={`empty-${i}`} name="star-o" size={16} color="#1d7532" />);
+          }
+        
+          return stars;
+      };
+      
+     
+
   // Header Component for FlatList: all static content on top
   const ListHeader = () => (
     <>
@@ -276,9 +302,26 @@ const formattedDate = deliveryDate.toLocaleDateString('en-GB', {
       <View style={styles.detailsContainer}>
         <Text style={styles.brand}>{product.brand}</Text>
           <Text style={styles.name}>{product.productName}</Text>
-          <Text style={styles.price}>{product.price}€</Text>   
-          <Text style={styles.deliveryText}>FREE Delivery.</Text>
-          <Text style={styles.deliveryText}>Delivered by {formattedDate}</Text>
+          <Text style={styles.description}>{product.description}</Text>
+
+           {product.rating !== undefined && (
+              <View style={styles.ratingContainer}>
+                {renderStars(product.rating)}
+                <Text style={styles.productRating}>({product.rating.toFixed(1)})</Text>
+                <Text style={styles.discountText}>↓ {product.discountPercent}%</Text>
+
+              </View>
+            )}
+
+            <View style={styles.priceRow}>
+                <Text style={styles.originalPrice}>₹{product.price}</Text>
+                <Text style={styles.discountedPrice}>₹{product.discountedPrice}</Text>
+              </View>
+            
+              <Text style={styles.hotDeal}>Hot Deal</Text>
+            
+          
+          <Text style={styles.deliveryText}>FREE Delivery by {formattedDate}</Text>
 
         {/* <Text style={styles.label}>Size</Text>
         <View style={styles.selectionBox}>
@@ -320,6 +363,7 @@ const formattedDate = deliveryDate.toLocaleDateString('en-GB', {
             within 30 days
           </Text>
         </View>
+        
 
         <View style={styles.storeAvailabilityContainer}>
           <Text style={styles.storeAvailabilityText}>
@@ -421,8 +465,23 @@ const formattedDate = deliveryDate.toLocaleDateString('en-GB', {
           <Text style={styles.brand}>{item.brand}</Text>
           <Text style={styles.name}>{item.productName}</Text>
           <Text style={styles.price}>{item.price}€</Text>
+      
+          {/* Optional: Display discounted price if available */}
+          {item.discountedPrice && (
+            <Text style={styles.discountedPrice}>
+              {item.discountedPrice}€
+            </Text>
+          )}
+      
+          {/* Optional: Display category name */}
+          {item.category?.categoryName && (
+            <Text style={styles.categoryName}>{item.category.categoryName}</Text>
+          )}
+      
+          {/* Optional: Display static text or a badge like “In Stock”, ratings, etc. */}
         </TouchableOpacity>
       )}
+      
     />
   );
 };
@@ -450,13 +509,18 @@ const styles = StyleSheet.create({
   },
   imageSlider: {
     height: 400,
+    resizeMode:"cover"
   },
   productImage: {
     width: "100%",
     height: 400,
-    resizeMode: "cover",
+    resizeMode: "stretch",
   },
-  detailsContainer: {
+  detailsContainer: {  discountText: {
+    color: 'green',
+    fontWeight: 'bold',
+    marginRight: 5,
+  },
     padding: 16,
   },
   brand: {
@@ -590,7 +654,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     flex: 1, // allows it to take up available space
     marginRight: 10, // space between name and price
-    marginBottom:10,
+  },
+  description:{
+    fontSize:16
+  },
+  discountedPrice: {
+    fontSize: 16,
+    color: "red",
+    textDecorationLine: "line-through",
+    marginTop: 2,
+  },
+  categoryName: {
+    fontSize: 12,
+    color: "#555",
   },
   
   
@@ -613,11 +689,63 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   deliveryText: {
-    marginTop: 5,
+    marginTop: 10,
     fontSize: 14,
     color: '#2e7d32',
     fontWeight: '500',
-  }
+  },
+
+
+
+
+
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+    marginLeft:5
+},
+productRating: {
+    fontSize: 14,
+    color: '#1d7532',
+    marginLeft: 5,
+},
+originalPrice: {
+  textDecorationLine: 'line-through',
+  color: 'grey',
+  fontSize:18,
+  marginRight: 5,
+},
+
+discountedPrice: {
+  color: 'black',
+  fontWeight: 'bold',
+  fontSize:18
+},
+
+priceRow: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginTop: 10,
+  marginLeft:5
+},
+
+hotDeal: {
+  backgroundColor: '#d4f8d4',
+  color: 'green',
+  fontWeight: 'bold',
+  alignSelf: 'flex-start',
+  paddingHorizontal: 6,
+  paddingVertical: 2,
+  borderRadius: 4,
+  marginTop: 6,
+  marginLeft:5
+},
+discountText: {
+  color: 'green',
+  fontWeight: 'bold',
+  marginRight: 5,
+},
   
 });
 
