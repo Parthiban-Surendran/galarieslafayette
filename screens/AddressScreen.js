@@ -1492,7 +1492,7 @@ const AddressScreen = ({ route, navigation }) => {
   const [paymentLoading, setPaymentLoading] = useState(false);
 
   const deliveryCharge = 50; // Example delivery charge
-  const orderTotal = cartItems.reduce((total, item) => total + item.product.price * item.quantity, 0) + deliveryCharge;
+  const orderTotal = cartItems.reduce((total, item) => total + item.product.discountedPrice * item.quantity, 0) + deliveryCharge;
   const arrivingDate = new Date();
   arrivingDate.setDate(arrivingDate.getDate() + 3); // Add 3 days for arrival
 
@@ -1742,7 +1742,7 @@ const AddressScreen = ({ route, navigation }) => {
                 />
                 <View style={styles.itemDetails}>
                   <Text style={styles.itemName}>{item.product.productName} x {item.quantity}</Text>
-                  <Text style={styles.itemPrice}>₹{item.product.price * item.quantity}</Text>
+                  <Text style={styles.itemPrice}>₹{item.product.discountedPrice * item.quantity}</Text>
                 </View>
               </View>
             ))}

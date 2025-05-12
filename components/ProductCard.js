@@ -156,7 +156,7 @@ const ProductCard = ({ product }) => {
     <TouchableOpacity style={styles.card} onPress={() => handleProduct(product)}>
       <Image source={{ uri: product.imageUrl }} style={styles.image} />
       <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">{product.productName}</Text>
-      <Text style={styles.price}>{product.price.toFixed(2)}€</Text>
+      <Text style={styles.price}>{product.discountedPrice.toFixed(2)}€</Text>
       <TouchableOpacity style={styles.button} onPress={handleAddToCart}>
         <Text style={styles.buttonText}>Add to Cart</Text>
       </TouchableOpacity>

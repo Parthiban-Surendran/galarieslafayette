@@ -97,7 +97,7 @@ return (
                   <Image source={{ uri: item.product.imageUrl }} style={styles.image} />
                   <View style={{ flex: 1, marginLeft: 10 }}>
                     <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">{item.product.productName}</Text>
-                    <Text style={styles.price}>{item.product.price.toFixed(2)}€</Text>
+                    <Text style={styles.price}>{item.product.discountedPrice.toFixed(2)}€</Text>
                   </View>
                   <TouchableOpacity
                     style={styles.removeButton}

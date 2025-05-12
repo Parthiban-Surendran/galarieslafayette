@@ -50,8 +50,8 @@ const usePayment = () => {
       items: cartItems.map(item => ({
         productId: item.product.productId,  // Assuming 'productId' exists in the cart item
         quantity: item.quantity,
-        price: item.product.price,
-        totalAmount:item.product.price*item.quantity
+        price: item.product.discountedPrice,
+        totalAmount:item.product.discountedPrice*item.quantity
       })),
       address: {
         line1: selectedAddress.line1,

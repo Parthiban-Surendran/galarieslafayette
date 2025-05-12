@@ -1096,7 +1096,7 @@ const BasketScreen = ({ navigation }) => {
 
                       {/* RIGHT: Price */}
                       <Text style={{ fontSize: 17, fontWeight: '600' }}>
-                        €{(item.product.price * item.quantity).toFixed(2)}
+                        €{(item.product.discountedPrice * item.quantity).toFixed(2)}
                       </Text>
                     </View>
                   </View>
