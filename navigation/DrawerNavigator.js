@@ -28,7 +28,7 @@
  import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import HomeScreen from "../screens/HomeScreen";
-import Favourites from '../screens/FavouritesScreen';
+import FavouritesScreen from '../screens/FavouritesScreen';
 import Basket from "../screens/BasketScreen";
 import ReusableDrawer from "../components/ReusableDrawer";
 import AccountScreen from "../screens/AccountScreen";
@@ -97,6 +97,7 @@ export default function DrawerNavigator({navigation}) {
             {/* <Drawer.Screen name="OrdersScreen" component={OrderScreen} /> */}
             <Drawer.Screen name="PaymentSuccess" component={PaymentSuccess} />
             <Drawer.Screen name="AddressScreen" component={AddressScreen} />
+            <Drawer.Screen name="FavouritesScreen" component={FavouritesScreen} />
 
             {/* <Drawer.Screen name="OrderDetail" component={OrderDetailScreen} /> */}
 

@@ -589,17 +589,6 @@ export default function ReusableDrawer(props) {
   } = useCategoryManager(navigation, props.navigation.closeDrawer);
   
   
-  // const [categories, setCategories] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  // const [selectedCategory, setSelectedCategory] = useState(null);
-  // const [history, setHistory] = useState([]);
-  // const [products, setProducts] = useState([]); // Added for product fetching
-
-
-  
- 
-
-  // Fetch categories from backend.
  
   return (
     <DrawerContentScrollView {...props} style={styles.container}>

@@ -435,7 +435,7 @@ const HomeScreen = ({ navigation }) => {
     const [loading,setLoading] = useState(false);
 
     const handlePressBanner44 = async (categoryId) => {
-        setLoading(true); // Show loader
+        setLoading(true); 
         try {
             const data = await fetchBannerProducts(categoryId);
             navigation.navigate('Dashboard', {
@@ -445,7 +445,7 @@ const HomeScreen = ({ navigation }) => {
         } catch (error) {
             console.error('Error fetching banner products:', error);
         } finally {
-            setLoading(false); // Hide loader regardless of success/failure
+            setLoading(false); 
         }
     };
     

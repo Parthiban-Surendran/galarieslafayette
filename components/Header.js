@@ -171,12 +171,14 @@ import { useCart } from "../context/CartContext";
 export default function Header() {
     const navigation = useNavigation();
     const { isLoggedIn } = useAuth();
-    const { cartBadge, loadCart } = useCategoryManager();
+    const { cartBadge,favouriteBadge, loadCart } = useCategoryManager();
     const { cartUpdated } = useCart();
     const isFocused = useIsFocused();
     
     // State to manage the cart badge value, only update it when necessary
     const [cachedCartBadge, setCachedCartBadge] = useState(cartBadge);
+    const [cachedFavouriteBadge, setCachedFavouriteBadge] = useState(favouriteBadge);
+    console.log(favouriteBadge,cachedFavouriteBadge)
 
     // Load cart data when cartUpdated changes
     useEffect(() => {
@@ -188,12 +190,15 @@ export default function Header() {
         if (cartBadge !== cachedCartBadge) { 
             setCachedCartBadge(cartBadge);
         }
-    }, [cartBadge]);
+        if (favouriteBadge !== cachedFavouriteBadge) { 
+            setCachedFavouriteBadge(favouriteBadge);
+        }
+    }, [cartBadge,favouriteBadge]);
 
     // Navigation handlers to prevent unnecessary re-renders
     const handleFavourites = () => {
         if (!isFocused || navigation.getState().routes[0].name !== 'Dashboard') {
-            navigation.navigate('Dashboard', { screen: 'FavouritesScreen' });
+            navigation.navigate('FavouritesScreen');
             // navigation.navigate("Search")
         }
     };
@@ -241,9 +246,15 @@ export default function Header() {
                     <Image source={galarieslogo} style={styles.logo} />
                 </TouchableOpacity>
                 <View style={styles.options}>
-                    <TouchableOpacity onPress={handleFavourites}>
-                        <Feather name="heart" size={26} color="black" />
-                    </TouchableOpacity>
+                    <View style={styles.cartIconContainer}>
+                        <TouchableOpacity onPress={handleFavourites}>
+                            <Feather name="heart" size={26} color="black" />
+                        </TouchableOpacity>
+                        {/* {cachedFavouriteBadge > 0 && (
+                            <View style={styles.FavouriteBadge}>
+                            </View>
+                        )} */}
+                    </View>
 
                     <TouchableOpacity onPress={handleOrders}>
                         <Feather name="shopping-bag" size={26} color="black" />
@@ -309,6 +320,18 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5,
         minWidth: 18,
         height: 18,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    FavouriteBadge: {
+        position: 'absolute',
+        top: -3,
+        right: -3,
+        backgroundColor: 'red',
+        borderRadius: 10,
+        paddingHorizontal: 5,
+        minWidth: 12,
+        height: 12,
         justifyContent: 'center',
         alignItems: 'center',
     },

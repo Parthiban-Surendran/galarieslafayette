@@ -267,6 +267,7 @@ import {
 import useCategoryManager from '../hooks/useCategoryManager';
 import { useNavigation } from '@react-navigation/native';
 import GaleriesLoader from '../components/GaleriesLoader';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const OrderScreen = () => {
   const { orders, loadOrders } = useCategoryManager();
@@ -274,8 +275,10 @@ const OrderScreen = () => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
 
-  useFocusEffect(
-    useCallback(() => {
+  
+
+  
+    useEffect(() => {
       const fetchOrders = async () => {
         setLoading(true);
         await loadOrders(1);
@@ -284,21 +287,20 @@ const OrderScreen = () => {
   
       fetchOrders();
     }, [])
-  );
   
+
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Delivered':
-      case 'COMPLETED':
+      case 'DELIVERED':
         return { color: '#22c55e' };
-      case 'Shipped':
+      case 'SHIPPED':
         return { color: '#facc15' };
-      case 'Processing':
+      case 'PROCESSING':
         return { color: '#3b82f6' };
       case 'PENDING':
-        return { color: '#f87171' };
+        return { color: '#faef55' };
       default:
-        return { color: '#6b7280' };
+        return { color: '#f87171' };
     }
   };
 
@@ -341,7 +343,7 @@ const OrderScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView  showsVerticalScrollIndicator={false} style={styles.container}>
       <Text style={styles.title}>Your Orders</Text>
       {loading ? (
 <GaleriesLoader/>      ) : orders.length === 0 ? (
@@ -358,7 +360,7 @@ const OrderScreen = () => {
           contentContainerStyle={styles.list}
         />
       )}
-    </View>
+    </ScrollView>
   );
 };
 

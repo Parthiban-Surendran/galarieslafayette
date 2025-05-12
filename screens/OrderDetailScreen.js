@@ -863,13 +863,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 20,
   },
   list: {
     paddingBottom: 20,
   },
   headerContainer: {
     marginBottom: 20,
+    marginTop:20
   },
   title: {
     fontSize: 22,

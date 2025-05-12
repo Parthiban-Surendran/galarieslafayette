@@ -10,8 +10,8 @@
 
 // export default function DashboardScreen({ navigation,route }) {
 //     const { title,products } = route.params || {};
-    
-    
+
+
 //     const [favorites, setFavorites] = useState({}); // Object to track favorite products
 
 //     // const products = [
@@ -65,7 +65,7 @@
 //                 ListFooterComponent={
 //                     <>
 //                         <LuxuryCard />
-                       
+
 //                         <BottomComp />
 //                     </>
 //                 }
@@ -163,7 +163,7 @@
 //         flexDirection: 'row',
 //         alignItems: 'center',
 //     },
-    
+
 //     strikeThrough: {
 //         textDecorationLine: 'line-through',
 //         marginRight: 10,
@@ -243,7 +243,7 @@
 //                 ListFooterComponent={
 //                     <>
 //                         <LuxuryCard />
-                       
+
 //                         <BottomComp />
 //                     </>
 //                 }
@@ -361,24 +361,25 @@ export default function DashboardScreen({ navigation, route }) {
     const [loading, setLoading] = useState(false);
     const [favourites, setFavourites] = useState([]);
 
-     const [snackbarVisible, setSnackbarVisible] = useState(false);
-      const [snackbarMessage, setSnackbarMessage] = useState('');
-    
-     
+    const [snackbarVisible, setSnackbarVisible] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
 
-  useEffect(() => {
-      const fetchAndUpdateFavourites = async () => {
-          try {
-              const data = await fetchFavourites(userId);
-              setFavourites(data);  // Ensure the UI stays in sync with the backend
-          } catch (err) {
-              Alert.alert("Error", "Failed to reload favourites.");
-          }
-      };
-  
-      fetchAndUpdateFavourites();  // Run this when favourites state changes
-  }, [favourites]);
-  console.log(products[0])
+
+
+    useEffect(() => {
+        const fetchAndUpdateFavourites = async () => {
+            try {
+                const data = await fetchFavourites(userId);
+                setFavourites(data);
+            } catch (err) {
+                Alert.alert("Error", "Failed to reload favourites.");
+            }
+        };
+    
+        fetchAndUpdateFavourites();
+    }, [favourites.length]);  
+    
+    console.log(products[0])
 
     const loadFavourites = async () => {
         try {
@@ -396,24 +397,24 @@ export default function DashboardScreen({ navigation, route }) {
 
     const isFavourite = (productId) =>
         favourites.some((fav) => fav.productId === productId);
-    
+
     const showSnackbar = (message) => {
         setSnackbarVisible(false); // Hide first
         setSnackbarMessage(message);
         setSnackbarVisible(true);  // Show immediately
     };
-    
+
     const toggleFavourite = async (item) => {
         const productId = item.productId || item.id;
         const isFav = isFavourite(productId);
-    
+
         // Optimistic UI update: Immediately update the state
         setFavourites((prev) =>
             isFav
                 ? prev.filter((fav) => fav.productId !== productId) // Remove from favourites
                 : [...prev, { productId, userId }] // Add to favourites
         );
-    
+
         try {
             if (isFav) {
                 // Remove from backend
@@ -430,7 +431,7 @@ export default function DashboardScreen({ navigation, route }) {
             loadFavourites();
         }
     };
-    
+
 
     const handleProduct = (item) => {
         navigation.navigate("Product", { product: item });
@@ -442,47 +443,47 @@ export default function DashboardScreen({ navigation, route }) {
         const fullStars = Math.floor(rating);
         const halfStar = rating % 1 >= 0.5;
         const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-      
+
         // Full stars
         for (let i = 0; i < fullStars; i++) {
             stars.push(<FontAwesome key={`full-${i}`} name="star" size={16} color="#1d7532" />);
         }
-      
+
         // Half star (if applicable)
         if (halfStar) {
             stars.push(<FontAwesome key="half" name="star-half" size={16} color="#1d7532" />);
         }
-      
+
         // Empty stars
         for (let i = 0; i < emptyStars; i++) {
             stars.push(<FontAwesome key={`empty-${i}`} name="star-o" size={16} color="#1d7532" />);
         }
-      
+
         return stars;
     };
 
     const deliveryDate = new Date();
     deliveryDate.setDate(deliveryDate.getDate() + 3); // Add 3 days
-    
+
     const formattedDate = deliveryDate.toLocaleDateString('en-GB', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
     });
-    
-   
-    
-  
+
+
+
+
     return (
         <View style={styles.container}>
             {loading ? (
                 <GaleriesLoader />
             ) : (
                 <FlatList
-                showsVerticalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
                     ListHeaderComponent={
                         <>
-                            
+
                             <View style={{ paddingHorizontal: 10 }}>
                                 <Text style={styles.breadcrumbs}>Products</Text>
                                 <Text style={styles.description}>
@@ -492,7 +493,7 @@ export default function DashboardScreen({ navigation, route }) {
                         </>
                     }
                     data={products}
-                   
+
                     numColumns={2}
                     columnWrapperStyle={{ justifyContent: 'center' }} // ✅ only affects rows of product cards
 
@@ -509,101 +510,107 @@ export default function DashboardScreen({ navigation, route }) {
                         if (isLeftItem) {
                             return (
                                 <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
- <TouchableOpacity style={styles.productCard} onPress={() => handleProduct(item)}>
-  <Image source={{ uri: item.imageUrl }} style={styles.productImage} />
-  <Text style={styles.productBrand}>{item.productName}</Text>
-  <Text style={styles.productTitle} numberOfLines={1} ellipsizeMode="tail">{item.brand}</Text>
-
-  {item.rating !== undefined && (
-    <View style={styles.ratingContainer}>
-      {renderStars(item.rating)}
-      <Text style={styles.productRating}>({item.rating.toFixed(1)})</Text>
-    </View>
-  )}
-
-  <View style={styles.priceRow}>
-    <Text style={styles.discountText}>↓ {item.discountPercent}%</Text>
-    <Text style={styles.originalPrice}>₹{item.originalPrice}</Text>
-    <Text style={styles.discountedPrice}>₹{item.discountedPrice}</Text>
-  </View>
-
-  <Text style={styles.hotDeal}>Hot Deal</Text>
-  <Text style={styles.deliveryDate}>Free delivery by <Text style={{ fontWeight: 'bold' }}>{formattedDate}</Text></Text>
-
-  <TouchableOpacity
-    style={styles.heartIcon}
-    onPress={() => toggleFavourite(item)}
-  >
-    {isFavourite(item.productId || item.id) ? (
-      <AntDesign name="heart" size={24} color="red" />
-    ) : (
-      <Feather name="heart" size={24} color="#FF0000" />
-    )}
-  </TouchableOpacity>
-</TouchableOpacity>
-
-    
-
-                                    {/* Divider and second item */}
-                                    {nextItem && (
+                                    {/* First item */}
+                                    <TouchableOpacity style={styles.productCard} onPress={() => handleProduct(item)}>
+                                        <Image source={{ uri: item.imageUrl }} style={styles.productImage} />
+                                        <Text style={styles.productBrand}>{item.productName}</Text>
+                                        <Text style={styles.productTitle} numberOfLines={1} ellipsizeMode="tail">{item.brand}</Text>
+                    
+                                        {item.rating !== undefined && (
+                                            <View style={styles.ratingContainer}>
+                                                {renderStars(item.rating)}
+                                                <Text style={styles.productRating}>({item.rating.toFixed(1)})</Text>
+                                            </View>
+                                        )}
+                    
+                                        <View style={styles.priceRow}>
+                                            <Text style={styles.discountText}>↓ {item.discountPercent}%</Text>
+                                            <Text style={styles.originalPrice}>€{item.price}</Text>
+                                            <Text style={styles.discountedPrice}>€{item.discountedPrice}</Text>
+                                        </View>
+                    
+                                        <Text style={styles.hotDeal}>Hot Deal</Text>
+                                        <Text style={styles.deliveryDate}>
+                                            Free delivery by <Text style={{ fontWeight: 'bold' }}>{formattedDate}</Text>
+                                        </Text>
+                    
+                                        <TouchableOpacity
+                                            style={styles.heartIcon}
+                                            onPress={() => toggleFavourite(item)}
+                                        >
+                                            {isFavourite(item.productId || item.id) ? (
+                                                <AntDesign name="heart" size={24} color="red" />
+                                            ) : (
+                                                <Feather name="heart" size={24} color="#FF0000" />
+                                            )}
+                                        </TouchableOpacity>
+                                    </TouchableOpacity>
+                    
+                                    {/* Divider and second item or placeholder */}
+                                    {nextItem ? (
                                         <>
                                             <View style={styles.verticalDivider} />
                                             <TouchableOpacity style={styles.productCard} onPress={() => handleProduct(nextItem)}>
-  <Image source={{ uri: nextItem.imageUrl }} style={styles.productImage} />
-  <Text style={styles.productBrand}>{nextItem.productName}</Text>
-  <Text style={styles.productTitle} numberOfLines={1} ellipsizeMode="tail">{nextItem.brand}</Text>
-
-  {item.rating !== undefined && (
-    <View style={styles.ratingContainer}>
-      {renderStars(nextItem.rating)}
-      <Text style={styles.productRating}>({nextItem.rating.toFixed(1)})</Text>
-    </View>
-  )}
-
-  <View style={styles.priceRow}>
-    <Text style={styles.discountText}>↓ {nextItem.discountPercent}%</Text>
-    <Text style={styles.originalPrice}>₹{nextItem.originalPrice}</Text>
-    <Text style={styles.discountedPrice}>₹{nextItem.discountedPrice}</Text>
-  </View>
-
-  <Text style={styles.hotDeal}>Hot Deal</Text>
-  <Text style={styles.deliveryDate}>Free delivery by <Text style={{ fontWeight: 'bold' }}>{formattedDate}</Text></Text>
-
-  <TouchableOpacity
-    style={styles.heartIcon}
-    onPress={() => toggleFavourite(nextItem)}
-  >
-    {isFavourite(nextItem.productId || nextItem.id) ? (
-      <AntDesign name="heart" size={24} color="red" />
-    ) : (
-      <Feather name="heart" size={24} color="#FF0000" />
-    )}
-  </TouchableOpacity>
-</TouchableOpacity>
-
+                                                <Image source={{ uri: nextItem.imageUrl }} style={styles.productImage} />
+                                                <Text style={styles.productBrand}>{nextItem.productName}</Text>
+                                                <Text style={styles.productTitle} numberOfLines={1} ellipsizeMode="tail">{nextItem.brand}</Text>
+                    
+                                                {nextItem.rating !== undefined && (
+                                                    <View style={styles.ratingContainer}>
+                                                        {renderStars(nextItem.rating)}
+                                                        <Text style={styles.productRating}>({nextItem.rating.toFixed(1)})</Text>
+                                                    </View>
+                                                )}
+                    
+                                                <View style={styles.priceRow}>
+                                                    <Text style={styles.discountText}>↓ {nextItem.discountPercent}%</Text>
+                                                    <Text style={styles.originalPrice}>€{nextItem.price}</Text>
+                                                    <Text style={styles.discountedPrice}>€{nextItem.discountedPrice}</Text>
+                                                </View>
+                    
+                                                <Text style={styles.hotDeal}>Hot Deal</Text>
+                                                <Text style={styles.deliveryDate}>
+                                                    Free delivery by <Text style={{ fontWeight: 'bold' }}>{formattedDate}</Text>
+                                                </Text>
+                    
+                                                <TouchableOpacity
+                                                    style={styles.heartIcon}
+                                                    onPress={() => toggleFavourite(nextItem)}
+                                                >
+                                                    {isFavourite(nextItem.productId || nextItem.id) ? (
+                                                        <AntDesign name="heart" size={24} color="red" />
+                                                    ) : (
+                                                        <Feather name="heart" size={24} color="#FF0000" />
+                                                    )}
+                                                </TouchableOpacity>
+                                            </TouchableOpacity>
                                         </>
+                                    ) : (
+                                        // Invisible placeholder to balance layout
+                                        <View style={[styles.productCard, { opacity: 0 }]} />
                                     )}
                                 </View>
                             );
                         }
                     
-                        // Skip rendering for right items — handled above
+                        // Right item already rendered with left, so skip
                         return null;
                     }}
                     
+
                 />
             )}
             <Snackbar
-                    visible={snackbarVisible}
-                    onDismiss={() => setSnackbarVisible(false)}
-                    duration={3000}
-                    action={{
-                      label: 'OK',
-                      onPress: () => setSnackbarVisible(false),
-                    }}
-                  >
-                    {snackbarMessage}
-                  </Snackbar>
+                visible={snackbarVisible}
+                onDismiss={() => setSnackbarVisible(false)}
+                duration={3000}
+                action={{
+                    label: 'OK',
+                    onPress: () => setSnackbarVisible(false),
+                }}
+            >
+                {snackbarMessage}
+            </Snackbar>
         </View>
     );
 }
@@ -622,41 +629,41 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: "#555",
         marginTop: 5,
-        paddingBottom:10,
+        paddingBottom: 10,
     },
     productCard: {
         width: '48%',
         backgroundColor: '#f9f9f9',
-        marginBottom:15,
-        paddingBottom:10,
+        marginBottom: 15,
+        paddingBottom: 10,
         // borderBottomWidth:0.5,
-        
+
         // borderColor:'#ccc'
         // no marginHorizontal here because we’re using justifyContent: 'space-between'
     },
     productImage: {
         width: "100%",
         // marginTop:20,
-        height:150,
+        height: 200,
         // marginLeft:10,
-        resizeMode:'cover',
+        resizeMode: 'stretch',
         backgroundColor: 'rgba(7, 7, 7, 0.3)'
     },
     productBrand: {
         fontSize: 16,
-        paddingHorizontal:10,
+        paddingHorizontal: 10,
         fontWeight: "bold",
         marginTop: 5,
     },
     productTitle: {
         fontSize: 14,
-        paddingHorizontal:10,
+        paddingHorizontal: 10,
         color: "#333",
         marginTop: 2,
     },
     productPrice: {
         fontSize: 16,
-        paddingHorizontal:10,
+        paddingHorizontal: 10,
         fontWeight: "bold",
         marginTop: 5,
     },
@@ -670,12 +677,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#ccc",
         marginHorizontal: 5,
     },
-     // Your existing styles
-     ratingContainer: {
+    // Your existing styles
+    ratingContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         marginTop: 5,
-        marginLeft:5
+        marginLeft: 5
     },
     productRating: {
         fontSize: 14,
@@ -686,27 +693,27 @@ const styles = StyleSheet.create({
         color: 'green',
         fontWeight: 'bold',
         marginRight: 5,
-      },
-      
-      originalPrice: {
+    },
+
+    originalPrice: {
         textDecorationLine: 'line-through',
         color: 'grey',
         marginRight: 5,
-      },
-      
-      discountedPrice: {
+    },
+
+    discountedPrice: {
         color: 'black',
         fontWeight: 'bold',
-      },
-      
-      priceRow: {
+    },
+
+    priceRow: {
         flexDirection: 'row',
         alignItems: 'center',
         marginTop: 4,
-        marginLeft:5
-      },
-      
-      hotDeal: {
+        marginLeft: 5
+    },
+
+    hotDeal: {
         backgroundColor: '#d4f8d4',
         color: 'green',
         fontWeight: 'bold',
@@ -715,15 +722,15 @@ const styles = StyleSheet.create({
         paddingVertical: 2,
         borderRadius: 4,
         marginTop: 6,
-        marginLeft:5
-      },
-      
-      deliveryDate: {
+        marginLeft: 5
+    },
+
+    deliveryDate: {
         fontSize: 12,
         color: '#444',
         marginTop: 4,
-        marginLeft:5
+        marginLeft: 5
 
-      },
-      
+    },
+
 });

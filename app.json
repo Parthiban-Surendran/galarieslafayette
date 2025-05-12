@@ -19,10 +19,12 @@
     "android": {
       "permissions": [
         "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
       ],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/playstore.png",
+        "foregroundImage": "./assets/galerieslafayette_logo.png",
         "backgroundColor": "#ffffff"
       },
       "intentFilters": [
@@ -44,7 +46,7 @@
           ]
         }
       ],
-      "package": "com.parthiban123.galarieslafayette"
+      "package": "com.parthibanparthiban.galarieslafayette"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -55,9 +57,12 @@
     "scheme": "myapp",
     "extra": {
       "eas": {
-        "projectId": "bc033368-ee7d-41b9-90df-7a56380d3eb5"
+        "projectId": "57fbd064-1c00-4343-a734-d2aba00a22a5"
       }
     },
-    "owner": "parthiban982003"
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/57fbd064-1c00-4343-a734-d2aba00a22a5"
+    }
   }
 }

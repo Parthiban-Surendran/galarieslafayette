@@ -17,7 +17,6 @@ export default function DashboardStack() {
       <Stack.Screen name="Purchase" component={PreparePurchaseScreen} />
       <Stack.Screen name="AllProducts" component={AllProducts} />
       <Stack.Screen name="Basket" component={BasketScreen} />
-      <Stack.Screen name="FavouritesScreen" component={FavouritesScreen} />
 
     </Stack.Navigator>
   );

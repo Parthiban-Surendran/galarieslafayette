@@ -205,6 +205,7 @@ export default function useCategoryManager(navigation, closeDrawer) {
   const [cartItems, setCartItems] = useState([]);
   const [isCartLoading, setIsCartLoading] = useState(false);
   const [cartBadge,setCartBadge] = useState(0);
+  const [favouriteBadge,setFavouriteBadge] = useState(0);
 
   const [orders, setOrders] = useState([]);
 const [orderItems, setOrderItems] = useState([]);
@@ -218,23 +219,27 @@ const [isOrderLoading, setIsOrderLoading] = useState(false);
 
   const fetchCategories = async (parentCategory = null) => {
     try {
-      setLoading(true);
       if (!parentCategory) {
+        setLoading(true);
+
         const data = await fetchParentCategories();
         setCategories(data);
         setProducts([]);
       } else {
         if (parentCategory.childIds?.length > 0) {
+                        setLoading(true);
+
           const data = await fetchChildCategories(parentCategory.childIds);
           setCategories(data);
           setProducts([]);
         } else {
           const prodData = await fetchProductsByCategory(parentCategory.categoryId);
+            closeDrawer();
           setProducts(prodData);
           setCategories([]);
           fetchCategories(null);
 
-          closeDrawer?.();
+        
           setHistory([]);
           navigation.navigate('Dashboard', {
             screen: 'DashboardMain',
@@ -295,6 +300,7 @@ const [isOrderLoading, setIsOrderLoading] = useState(false);
     try {
       const data = await fetchFavourites(userId);
       setFavourites(data);
+      setFavouriteBadge(data.length)
     } catch (error) {
       console.error("Failed to fetch favourites:", error);
     }
@@ -473,7 +479,9 @@ const [isOrderLoading, setIsOrderLoading] = useState(false);
   loadOrderItems,
   submitOrder,
 
-  cartBadge
+  cartBadge,
+  favouriteBadge,
+  setFavouriteBadge,
 
   };
 }

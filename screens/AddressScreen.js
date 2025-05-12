@@ -1471,6 +1471,7 @@ import GaleriesLoader from '../components/GaleriesLoader';
 import StepIndicator from '../components/StepIndicator';
 import Icon from 'react-native-vector-icons/Feather';  // Add this for the back icon
 import network from '../utils/network';
+import AutoResetScrollView from './AutoResetScrollView';
 
 const AddressScreen = ({ route, navigation }) => {
   const { cartItems = [] } = route.params || {};
@@ -1762,7 +1763,8 @@ const AddressScreen = ({ route, navigation }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
+    <AutoResetScrollView>
+          <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.header}>
       {currentStep !== 1 && (
         <TouchableOpacity onPress={() => setCurrentStep(1)} style={styles.backButton}>
@@ -1775,6 +1777,7 @@ const AddressScreen = ({ route, navigation }) => {
       <StepIndicator currentStep={currentStep} />
       {renderStepContent()}
     </ScrollView>
+    </AutoResetScrollView>
   );
 };
 
